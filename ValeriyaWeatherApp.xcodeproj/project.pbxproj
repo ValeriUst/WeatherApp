@@ -10,9 +10,13 @@
 		6474358F2B72745400D76ACB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6474358E2B72745400D76ACB /* AppDelegate.swift */; };
 		647435912B72745400D76ACB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 647435902B72745400D76ACB /* SceneDelegate.swift */; };
 		647435932B72745400D76ACB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 647435922B72745400D76ACB /* ViewController.swift */; };
-		647435962B72745400D76ACB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 647435942B72745400D76ACB /* Main.storyboard */; };
 		647435982B72745600D76ACB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 647435972B72745600D76ACB /* Assets.xcassets */; };
 		6474359B2B72745600D76ACB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 647435992B72745600D76ACB /* LaunchScreen.storyboard */; };
+		647435A42B7274C100D76ACB /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 647435A32B7274C100D76ACB /* SnapKit */; };
+		647435A62B7274C100D76ACB /* SnapKit-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 647435A52B7274C100D76ACB /* SnapKit-Dynamic */; };
+		647435AA2B72757D00D76ACB /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 647435A92B72757D00D76ACB /* NetworkService.swift */; };
+		647435AD2B7275A400D76ACB /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 647435AC2B7275A400D76ACB /* Models.swift */; };
+		647435AF2B7275B800D76ACB /* ViewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 647435AE2B7275B800D76ACB /* ViewModels.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,10 +24,12 @@
 		6474358E2B72745400D76ACB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		647435902B72745400D76ACB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		647435922B72745400D76ACB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		647435952B72745400D76ACB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		647435972B72745600D76ACB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6474359A2B72745600D76ACB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6474359C2B72745600D76ACB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		647435A92B72757D00D76ACB /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		647435AC2B7275A400D76ACB /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		647435AE2B7275B800D76ACB /* ViewModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModels.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +37,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				647435A42B7274C100D76ACB /* SnapKit in Frameworks */,
+				647435A62B7274C100D76ACB /* SnapKit-Dynamic in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,15 +64,73 @@
 		6474358D2B72745400D76ACB /* ValeriyaWeatherApp */ = {
 			isa = PBXGroup;
 			children = (
-				6474358E2B72745400D76ACB /* AppDelegate.swift */,
-				647435902B72745400D76ACB /* SceneDelegate.swift */,
-				647435922B72745400D76ACB /* ViewController.swift */,
-				647435942B72745400D76ACB /* Main.storyboard */,
+				647435B22B7275F500D76ACB /* Extensions */,
+				647435A72B72754B00D76ACB /* Resources  */,
+				647435A82B72756E00D76ACB /* Network */,
+				647435AB2B72758F00D76ACB /* Models */,
+				647435B02B7275C100D76ACB /* ViewModels */,
+				647435B12B7275D200D76ACB /* Screens */,
 				647435972B72745600D76ACB /* Assets.xcassets */,
-				647435992B72745600D76ACB /* LaunchScreen.storyboard */,
 				6474359C2B72745600D76ACB /* Info.plist */,
 			);
 			path = ValeriyaWeatherApp;
+			sourceTree = "<group>";
+		};
+		647435A72B72754B00D76ACB /* Resources  */ = {
+			isa = PBXGroup;
+			children = (
+				6474358E2B72745400D76ACB /* AppDelegate.swift */,
+				647435902B72745400D76ACB /* SceneDelegate.swift */,
+			);
+			path = "Resources ";
+			sourceTree = "<group>";
+		};
+		647435A82B72756E00D76ACB /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				647435A92B72757D00D76ACB /* NetworkService.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		647435AB2B72758F00D76ACB /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				647435AC2B7275A400D76ACB /* Models.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		647435B02B7275C100D76ACB /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				647435AE2B7275B800D76ACB /* ViewModels.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		647435B12B7275D200D76ACB /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				647435992B72745600D76ACB /* LaunchScreen.storyboard */,
+				647435922B72745400D76ACB /* ViewController.swift */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		647435B22B7275F500D76ACB /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				647435B32B7275FC00D76ACB /* Font */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		647435B32B7275FC00D76ACB /* Font */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Font;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -83,6 +149,10 @@
 			dependencies = (
 			);
 			name = ValeriyaWeatherApp;
+			packageProductDependencies = (
+				647435A32B7274C100D76ACB /* SnapKit */,
+				647435A52B7274C100D76ACB /* SnapKit-Dynamic */,
+			);
 			productName = ValeriyaWeatherApp;
 			productReference = 6474358B2B72745400D76ACB /* ValeriyaWeatherApp.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +181,9 @@
 				Base,
 			);
 			mainGroup = 647435822B72745400D76ACB;
+			packageReferences = (
+				647435A22B7274C100D76ACB /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			productRefGroup = 6474358C2B72745400D76ACB /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -127,7 +200,6 @@
 			files = (
 				6474359B2B72745600D76ACB /* LaunchScreen.storyboard in Resources */,
 				647435982B72745600D76ACB /* Assets.xcassets in Resources */,
-				647435962B72745400D76ACB /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,23 +210,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				647435AF2B7275B800D76ACB /* ViewModels.swift in Sources */,
 				647435932B72745400D76ACB /* ViewController.swift in Sources */,
 				6474358F2B72745400D76ACB /* AppDelegate.swift in Sources */,
+				647435AA2B72757D00D76ACB /* NetworkService.swift in Sources */,
 				647435912B72745400D76ACB /* SceneDelegate.swift in Sources */,
+				647435AD2B7275A400D76ACB /* Models.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		647435942B72745400D76ACB /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				647435952B72745400D76ACB /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		647435992B72745600D76ACB /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -297,9 +364,9 @@
 				INFOPLIST_FILE = ValeriyaWeatherApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -307,9 +374,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = valeriya.slesarenko.ValeriyaWeatherApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -325,9 +396,9 @@
 				INFOPLIST_FILE = ValeriyaWeatherApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -335,9 +406,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = valeriya.slesarenko.ValeriyaWeatherApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -363,6 +438,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		647435A22B7274C100D76ACB /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		647435A32B7274C100D76ACB /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 647435A22B7274C100D76ACB /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		647435A52B7274C100D76ACB /* SnapKit-Dynamic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 647435A22B7274C100D76ACB /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = "SnapKit-Dynamic";
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 647435832B72745400D76ACB /* Project object */;
 }
