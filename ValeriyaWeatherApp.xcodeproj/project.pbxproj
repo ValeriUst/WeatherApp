@@ -17,6 +17,11 @@
 		647435AA2B72757D00D76ACB /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 647435A92B72757D00D76ACB /* NetworkService.swift */; };
 		647435AD2B7275A400D76ACB /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 647435AC2B7275A400D76ACB /* Models.swift */; };
 		647435AF2B7275B800D76ACB /* ViewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 647435AE2B7275B800D76ACB /* ViewModels.swift */; };
+		647435B52B727A4200D76ACB /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = 647435B42B727A4200D76ACB /* Font.swift */; };
+		647435B72B727A7600D76ACB /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 647435B62B727A7600D76ACB /* Poppins-Medium.ttf */; };
+		647435B92B727A7B00D76ACB /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 647435B82B727A7B00D76ACB /* Poppins-Regular.ttf */; };
+		647435BB2B727A8100D76ACB /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 647435BA2B727A8100D76ACB /* Poppins-SemiBold.ttf */; };
+		647435BD2B727A8D00D76ACB /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 647435BC2B727A8D00D76ACB /* Roboto-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +35,11 @@
 		647435A92B72757D00D76ACB /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		647435AC2B7275A400D76ACB /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		647435AE2B7275B800D76ACB /* ViewModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModels.swift; sourceTree = "<group>"; };
+		647435B42B727A4200D76ACB /* Font.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
+		647435B62B727A7600D76ACB /* Poppins-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Medium.ttf"; sourceTree = "<group>"; };
+		647435B82B727A7B00D76ACB /* Poppins-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Regular.ttf"; sourceTree = "<group>"; };
+		647435BA2B727A8100D76ACB /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
+		647435BC2B727A8D00D76ACB /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Regular.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,6 +139,11 @@
 		647435B32B7275FC00D76ACB /* Font */ = {
 			isa = PBXGroup;
 			children = (
+				647435BA2B727A8100D76ACB /* Poppins-SemiBold.ttf */,
+				647435B82B727A7B00D76ACB /* Poppins-Regular.ttf */,
+				647435B62B727A7600D76ACB /* Poppins-Medium.ttf */,
+				647435BC2B727A8D00D76ACB /* Roboto-Regular.ttf */,
+				647435B42B727A4200D76ACB /* Font.swift */,
 			);
 			path = Font;
 			sourceTree = "<group>";
@@ -198,8 +213,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				647435BD2B727A8D00D76ACB /* Roboto-Regular.ttf in Resources */,
+				647435BB2B727A8100D76ACB /* Poppins-SemiBold.ttf in Resources */,
+				647435B72B727A7600D76ACB /* Poppins-Medium.ttf in Resources */,
 				6474359B2B72745600D76ACB /* LaunchScreen.storyboard in Resources */,
 				647435982B72745600D76ACB /* Assets.xcassets in Resources */,
+				647435B92B727A7B00D76ACB /* Poppins-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -212,6 +231,7 @@
 			files = (
 				647435AF2B7275B800D76ACB /* ViewModels.swift in Sources */,
 				647435932B72745400D76ACB /* ViewController.swift in Sources */,
+				647435B52B727A4200D76ACB /* Font.swift in Sources */,
 				6474358F2B72745400D76ACB /* AppDelegate.swift in Sources */,
 				647435AA2B72757D00D76ACB /* NetworkService.swift in Sources */,
 				647435912B72745400D76ACB /* SceneDelegate.swift in Sources */,
