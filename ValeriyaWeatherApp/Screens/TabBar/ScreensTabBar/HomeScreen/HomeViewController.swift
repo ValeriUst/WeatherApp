@@ -13,12 +13,14 @@ final class HomeViewController: UIViewController {
 	// MARK: - Content
 	private let scrollView: UIScrollView = {
 		let scroll = UIScrollView()
+		scroll.contentInsetAdjustmentBehavior = .never
 		scroll.translatesAutoresizingMaskIntoConstraints = false
 		return scroll
 	}()
 	
 	private let viewContainer: UIView = {
 		let viewContainer = UIView()
+		viewContainer.translatesAutoresizingMaskIntoConstraints = false
 		return viewContainer
 	}()
 	
@@ -30,14 +32,7 @@ final class HomeViewController: UIViewController {
 		return image
 	}()
 	
-	private let swipeDownLabel: UILabel = {
-		let label = UILabel()
-		label.text = "Swipe down for details"
-		label.textColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.6)
-		label.font = UIFont.robotoRegular(size: 12)
-		return label
-	}()
-
+	private let swipeDownLabel = UILabel.makeRobotoRegular(text: "Swipe down for details", fontSize: 12, textColor: .white)
 	private let nameCityLabel = UILabel.makeSemiBoldLabel(text: "Hyderabad", fontSize: 28, textColor: .white)
 	private let dateLabel = UILabel.makeRegularLabel(text: "20 Apr Wed  20°C/29°C", fontSize: 12.91, textColor: .white)
 	private let temperatureLabel = UILabel.makeSemiBoldLabel(text: "24°C", fontSize: 36, textColor: .white)
@@ -54,14 +49,15 @@ final class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 		view.backgroundColor = UIColor(named: "backPurple")
-		view.addSubviews ([scrollView, headImage, personButton, swipeDownButton, optionsButton, nameCityLabel, dateLabel, temperatureLabel, precipitationLabel, swipeDownLabel, todayLabel, swipeRightButton])
-		scrollView.addSubviews([viewContainer, headImage, collectionViewCity.view, collectionViewWeather.view])
+		view.addSubview(scrollView)
+		scrollView.addSubview(viewContainer)
+		viewContainer.addSubviews([headImage, personButton, swipeDownButton, optionsButton, nameCityLabel, dateLabel, temperatureLabel, precipitationLabel, swipeDownLabel, todayLabel, swipeRightButton,collectionViewCity.view, collectionViewWeather.view])
 		setConstraints()
     }
-	override func viewWillAppear(_ animated: Bool)
-	{
+	override func viewWillAppear(_ animated: Bool) {
 		self.navigationController?.isNavigationBarHidden = true
 	}
+	
 	//MARK: - Methods
 	@objc func swipeDownPressed() {
 		print("swipeDownPressed")
@@ -81,11 +77,12 @@ final class HomeViewController: UIViewController {
 		viewContainer.snp.makeConstraints { view in
 			view.edges.equalTo(scrollView)
 			view.width.equalTo(scrollView.snp.width)
-			view.height.equalTo(850)
+			view.height.equalTo(950)
 		}
 		headImage.snp.makeConstraints { image in
-			image.top.equalToSuperview()
-			image.leading.trailing.equalToSuperview()
+			image.top.equalTo(viewContainer.snp.top)
+			image.leading.equalTo(viewContainer.snp.leading)
+			image.trailing.equalTo(viewContainer.snp.trailing)
 			image.height.equalTo(381)
 		}
 		personButton.snp.makeConstraints { button in
@@ -106,7 +103,7 @@ final class HomeViewController: UIViewController {
 		}
 		nameCityLabel.snp.makeConstraints { label in
 			label.top.equalTo(viewContainer.snp.top).offset(170)
-			label.leading.equalToSuperview().offset(25)
+			label.leading.equalTo(viewContainer.snp.leading).offset(25)
 		}
 		dateLabel.snp.makeConstraints { label in
 			label.top.equalTo(nameCityLabel.snp.bottom).offset(14)
@@ -117,12 +114,13 @@ final class HomeViewController: UIViewController {
 			label.trailing.equalTo(viewContainer.snp.trailing).offset(-25)
 		}
 		precipitationLabel.snp.makeConstraints { label in
-			label.top.equalTo(temperatureLabel.snp.bottom).offset(10)
+			label.top.equalTo(temperatureLabel.snp.bottom).offset(7)
 			label.trailing.equalTo(viewContainer.snp.trailing).offset(-25)
 		}
 		collectionViewCity.view.snp.makeConstraints { collectionView in
 			collectionView.top.equalTo(headImage.snp.bottom).offset(30)
-			collectionView.leading.trailing.equalToSuperview().offset(25)
+			collectionView.leading.equalTo(viewContainer.snp.leading)
+			collectionView.trailing.equalTo(viewContainer.snp.trailing)
 			collectionView.height.equalTo(215)
 		}
 		todayLabel.snp.makeConstraints { label in
@@ -131,13 +129,13 @@ final class HomeViewController: UIViewController {
 		}
 		collectionViewWeather.view.snp.makeConstraints { collectionView in
 			collectionView.top.equalTo(todayLabel.snp.bottom).offset(6)
-			collectionView.leading.equalToSuperview().offset(25)
-			collectionView.trailing.equalToSuperview().offset(-25)
+			collectionView.leading.equalTo(viewContainer.snp.leading)
+			collectionView.trailing.equalTo(viewContainer.snp.trailing).offset(-25)
 			collectionView.height.equalTo(115)
 		}
 		swipeRightButton.snp.makeConstraints { button in
 			button.centerY.equalTo(collectionViewWeather.view.snp.centerY)
-			button.trailing.equalToSuperview().offset(-5)
+			button.trailing.equalTo(viewContainer.snp.trailing).offset(-5)
 		}
 	}
 }

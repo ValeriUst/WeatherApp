@@ -16,6 +16,7 @@ final class WeatherHorizontalScrollCollection: UICollectionViewController, UICol
 		let layout = UICollectionViewFlowLayout()
 		layout.scrollDirection = .horizontal
 		layout.minimumLineSpacing = 20
+		layout.sectionInset = UIEdgeInsets(top: 0, left: 25, bottom: 0, right: 25) 
 		return layout
 	}()
 	

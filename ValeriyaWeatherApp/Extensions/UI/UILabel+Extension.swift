@@ -13,7 +13,6 @@ extension UILabel {
 		label.textColor = textColor
 		return label
 	}
-	
 	static func makeRegularLabel(text: String, fontSize: CGFloat, textColor: UIColor) -> UILabel {
 		let label = UILabel()
 		label.text = text
@@ -25,6 +24,13 @@ extension UILabel {
 		let label = UILabel()
 		label.text = text
 		label.font = UIFont.poppinsMedium(size: fontSize)
+		label.textColor = textColor
+		return label
+	}
+	static func makeRobotoRegular(text: String, fontSize: CGFloat, textColor: UIColor) -> UILabel {
+		let label = UILabel()
+		label.text = text
+		label.font = UIFont.robotoRegular(size: fontSize)
 		label.textColor = textColor
 		return label
 	}
