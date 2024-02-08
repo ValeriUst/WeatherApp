@@ -1,11 +1,11 @@
-//  HorizontalScrollCollection.swift
+//  CityHorizontalScrollCollection.swift
 //  ValeriyaWeatherApp
 //  Created by Валерия Устименко on 08.02.2024.
 
 import UIKit
 import SnapKit
 
-final class HorizontalScrollCollection: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+final class CityHorizontalScrollCollection: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 	
 	// MARK: - Constants
 	private let images = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
@@ -18,13 +18,19 @@ final class HorizontalScrollCollection: UICollectionViewController, UICollection
 		return layout
 	}()
 	
+	private func setupCollectionView() {
+		collectionView.backgroundColor = .clear
+		collectionView.collectionViewLayout = layout
+		collectionView.showsHorizontalScrollIndicator = false
+		collectionView.register(CityHorizontalScrollCell.self,
+								forCellWithReuseIdentifier: CityHorizontalScrollCell.identifier)
+	}
+	
 	// MARK: - Lifecycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		collectionView.backgroundColor = .clear
-		collectionView.collectionViewLayout = layout
-		collectionView.register(HorizontalScrollCell.self, 
-								forCellWithReuseIdentifier: HorizontalScrollCell.identifier)
+		setupCollectionView()
+		
 	}
 	
 	// MARK: - UICollectionViewDataSource
@@ -33,8 +39,8 @@ final class HorizontalScrollCollection: UICollectionViewController, UICollection
 	}
 	
 	override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HorizontalScrollCell.identifier, 
-															for: indexPath) as? HorizontalScrollCell else {
+		guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CityHorizontalScrollCell.identifier,
+															for: indexPath) as? CityHorizontalScrollCell else {
 			return UICollectionViewCell()
 		}
 		cell.layer.cornerRadius = 22

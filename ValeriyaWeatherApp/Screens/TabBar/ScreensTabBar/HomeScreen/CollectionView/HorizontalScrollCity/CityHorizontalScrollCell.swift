@@ -1,11 +1,11 @@
-//  HorizontalScrollCell.swift
+//  CityHorizontalScrollCell.swift
 //  ValeriyaWeatherApp
 //  Created by Валерия Устименко on 08.02.2024.
 
 import UIKit
 import SnapKit
 
-final class HorizontalScrollCell: UICollectionViewCell {
+final class CityHorizontalScrollCell: UICollectionViewCell {
 	
 	// MARK: - Constants
 	static let identifier = "CollectionViewCellCell"
