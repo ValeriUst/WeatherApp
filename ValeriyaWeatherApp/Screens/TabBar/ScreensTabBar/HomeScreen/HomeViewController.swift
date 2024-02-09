@@ -7,6 +7,7 @@ import SnapKit
 
 final class HomeViewController: UIViewController {
 	
+	// MARK: - Constants
 	private let collectionViewCity = CityHorizontalScrollCollection(collectionViewLayout: UICollectionViewFlowLayout())
 	private let collectionViewWeather = WeatherHorizontalScrollCollection(collectionViewLayout: UICollectionViewFlowLayout())
 
@@ -32,17 +33,19 @@ final class HomeViewController: UIViewController {
 		return image
 	}()
 	
+	//UILabels
 	private let swipeDownLabel = UILabel.makeRobotoRegular(text: "Swipe down for details", fontSize: 12, textColor: .white)
 	private let nameCityLabel = UILabel.makeSemiBoldLabel(text: "Hyderabad", fontSize: 28, textColor: .white)
 	private let dateLabel = UILabel.makeRegularLabel(text: "20 Apr Wed  20°C/29°C", fontSize: 12.91, textColor: .white)
 	private let temperatureLabel = UILabel.makeSemiBoldLabel(text: "24°C", fontSize: 36, textColor: .white)
 	private let precipitationLabel = UILabel.makeRegularLabel(text: "Clear sky", fontSize: 21.33, textColor: .white)
 	private let todayLabel = UILabel.makeMediumLabel(text: "Today", fontSize: 20, textColor: .white)
-
+	
+	//UIButtons
 	private let personButton = UIButton.makeImageButton(named: "person", target: self, action: #selector(personButtonPressed))
 	private let optionsButton = UIButton.makeImageButton(named: "ButtonLeft", target: self, action: #selector(optionsButtonPressed))
 	private let swipeDownButton = UIButton.makeImageButton(named: "vector", target: self, action: #selector(swipeDownPressed))
-	private let swipeRightButton = UIButton.makeImageButton(named: "vectorRight", target: self, action: #selector(swipeDownPressed))
+	private let swipeRightButton = UIButton.makeImageButton(named: "vectorRight", target: self, action: #selector(swipeRightPressed))
 
 
 	// MARK: - Lifecycle
@@ -59,14 +62,24 @@ final class HomeViewController: UIViewController {
 	}
 	
 	//MARK: - Methods
+	// Прокрутка скролла в конец
+	@objc func swipeRightPressed() {
+		let lastItem = collectionViewWeather.collectionView.numberOfItems(inSection: 0) - 1
+		let lastItemIndexPath = IndexPath(item: lastItem, section: 0)
+		collectionViewWeather.collectionView.scrollToItem(at: lastItemIndexPath, at: .right, animated: true)
+	}
 	@objc func swipeDownPressed() {
 		print("swipeDownPressed")
 	}
 	@objc func optionsButtonPressed() {
 		print("optionsButtonPressed")
 	}
+	//Открытие модального окна при нажатии на кнопку
 	@objc func personButtonPressed() {
 		print("personButtonPressed")
+		let profileVC = ModalViewController()
+		profileVC.modalPresentationStyle = .fullScreen // Устанавливаем стиль презентации модального окна
+		present(profileVC, animated: true, completion: nil) // Отобразить модальное окно
 	}
 	
 	// MARK: - Constraints
@@ -86,11 +99,11 @@ final class HomeViewController: UIViewController {
 			image.height.equalTo(381)
 		}
 		personButton.snp.makeConstraints { button in
-			button.top.equalTo(viewContainer.snp.top).offset(20)
+			button.top.equalTo(viewContainer.snp.top).offset(80)
 			button.leading.equalTo(viewContainer.snp.leading).offset(25)
 		}
 		optionsButton.snp.makeConstraints { button in
-			button.top.equalTo(viewContainer.snp.top).offset(28)
+			button.top.equalTo(viewContainer.snp.top).offset(88)
 			button.trailing.equalTo(viewContainer.snp.trailing).offset(-27)
 		}
 		swipeDownLabel.snp.makeConstraints { label in

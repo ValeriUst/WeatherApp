@@ -50,7 +50,6 @@ final class WeatherHorizontalScrollCollection: UICollectionViewController, UICol
 		let imageName = images[indexPath.item]
 		cell.imageViewWeather.image = UIImage(named: imageName)
 		
-		
 		let label = labels[indexPath.item]
 		cell.timeLabel.text = labels[indexPath.item]
 		

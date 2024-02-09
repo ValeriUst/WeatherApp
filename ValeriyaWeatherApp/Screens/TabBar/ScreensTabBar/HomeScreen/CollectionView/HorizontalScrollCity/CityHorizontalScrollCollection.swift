@@ -31,7 +31,6 @@ final class CityHorizontalScrollCollection: UICollectionViewController, UICollec
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupCollectionView()
-		
 	}
 	
 	// MARK: - UICollectionViewDataSource
