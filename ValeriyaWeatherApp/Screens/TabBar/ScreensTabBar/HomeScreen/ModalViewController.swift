@@ -4,7 +4,7 @@
 
 import UIKit
 
-class ModalViewController: UIViewController {
+final class ModalViewController: UIViewController {
 	
 	// MARK: - Content
 	private let helloLabel = UILabel.makeSemiBoldLabel(text: "Hello World!", fontSize: 30, textColor: .white)
@@ -26,8 +26,7 @@ class ModalViewController: UIViewController {
 	}
 
 	@objc func swipeDownPressed() {
-		print("swipeDownPressed")
-		dismiss(animated: true, completion: nil) // Закрыть модальное окно
+		dismiss(animated: true, completion: nil)
 	}
 	
 	// MARK: - Constraints

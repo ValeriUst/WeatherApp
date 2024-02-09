@@ -73,13 +73,15 @@ final class HomeViewController: UIViewController {
 	}
 	@objc func optionsButtonPressed() {
 		print("optionsButtonPressed")
+		let greenVC = GreenViewController()
+		navigationController?.pushViewController(greenVC, animated: true)
 	}
+	
 	//Открытие модального окна при нажатии на кнопку
 	@objc func personButtonPressed() {
-		print("personButtonPressed")
 		let profileVC = ModalViewController()
-		profileVC.modalPresentationStyle = .fullScreen // Устанавливаем стиль презентации модального окна
-		present(profileVC, animated: true, completion: nil) // Отобразить модальное окно
+		profileVC.modalPresentationStyle = .fullScreen
+		present(profileVC, animated: true, completion: nil)
 	}
 	
 	// MARK: - Constraints
