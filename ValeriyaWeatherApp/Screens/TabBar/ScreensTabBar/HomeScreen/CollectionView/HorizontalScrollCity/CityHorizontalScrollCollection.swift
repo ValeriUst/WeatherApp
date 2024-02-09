@@ -32,7 +32,7 @@ final class CityHorizontalScrollCollection: UICollectionViewController, UICollec
 		super.viewDidLoad()
 		setupCollectionView()
 	}
-	
+
 	// MARK: - UICollectionViewDataSource
 	override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return images.count
@@ -46,7 +46,6 @@ final class CityHorizontalScrollCollection: UICollectionViewController, UICollec
 		cell.layer.cornerRadius = 22
 		cell.layer.masksToBounds = true
 		let imageName = images[indexPath.item]
-		cell.imageViewCity.image = UIImage(named: imageName)
 		return cell
 	}
 	

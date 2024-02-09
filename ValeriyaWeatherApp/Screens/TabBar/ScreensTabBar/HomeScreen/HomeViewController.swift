@@ -8,6 +8,7 @@ import SnapKit
 final class HomeViewController: UIViewController {
 	
 	// MARK: - Constants
+	private var weatherViewModelNow: WeatherViewModelNow? 
 	private let collectionViewCity = CityHorizontalScrollCollection(collectionViewLayout: UICollectionViewFlowLayout())
 	private let collectionViewWeather = WeatherHorizontalScrollCollection(collectionViewLayout: UICollectionViewFlowLayout())
 
@@ -35,18 +36,17 @@ final class HomeViewController: UIViewController {
 	
 	//UILabels
 	private let swipeDownLabel = UILabel.makeRobotoRegular(text: "Swipe down for details", fontSize: 12, textColor: .white)
-	private let nameCityLabel = UILabel.makeSemiBoldLabel(text: "Hyderabad", fontSize: 28, textColor: .white)
-	private let dateLabel = UILabel.makeRegularLabel(text: "20 Apr Wed  20°C/29°C", fontSize: 12.91, textColor: .white)
-	private let temperatureLabel = UILabel.makeSemiBoldLabel(text: "24°C", fontSize: 36, textColor: .white)
-	private let precipitationLabel = UILabel.makeRegularLabel(text: "Clear sky", fontSize: 21.33, textColor: .white)
 	private let todayLabel = UILabel.makeMediumLabel(text: "Today", fontSize: 20, textColor: .white)
+	private let nameCityLabel = UILabel.makeSemiBoldLabel(text: "", fontSize: 28, textColor: .white)
+	private let dateLabel = UILabel.makeRegularLabel(text: "20 Apr Wed  20°C/29°C", fontSize: 12.91, textColor: .white)
+	private let temperatureLabel = UILabel.makeSemiBoldLabel(text: "", fontSize: 36, textColor: .white)
+	private let precipitationLabel = UILabel.makeRegularLabel(text: "", fontSize: 21.33, textColor: .white)
 	
 	//UIButtons
 	private let personButton = UIButton.makeImageButton(named: "person", target: self, action: #selector(personButtonPressed))
 	private let optionsButton = UIButton.makeImageButton(named: "ButtonLeft", target: self, action: #selector(optionsButtonPressed))
 	private let swipeDownButton = UIButton.makeImageButton(named: "vector", target: self, action: #selector(swipeDownPressed))
 	private let swipeRightButton = UIButton.makeImageButton(named: "vectorRight", target: self, action: #selector(swipeRightPressed))
-
 
 	// MARK: - Lifecycle
     override func viewDidLoad() {
@@ -56,17 +56,7 @@ final class HomeViewController: UIViewController {
 		scrollView.addSubview(viewContainer)
 		viewContainer.addSubviews([headImage, personButton, swipeDownButton, optionsButton, nameCityLabel, dateLabel, temperatureLabel, precipitationLabel, swipeDownLabel, todayLabel, swipeRightButton,collectionViewCity.view, collectionViewWeather.view])
 		setConstraints()
-		
-		
-		// Вызов функции получения погоды и вывод в консоль
-		APICaller.shared.getWeather { result in
-			switch result {
-			case .success(let weather):
-				print("Weather: \(weather)")
-			case .failure(let error):
-				print("Failed to get weather data: \(error)")
-			}
-		}
+		fetchWeatherData()
     }
 	override func viewWillAppear(_ animated: Bool) {
 		self.navigationController?.isNavigationBarHidden = true
@@ -74,15 +64,15 @@ final class HomeViewController: UIViewController {
 
 	//MARK: - Methods
 	// Прокрутка скролла в конец
-	@objc func swipeRightPressed() {
+	@objc private func swipeRightPressed() {
 		let lastItem = collectionViewWeather.collectionView.numberOfItems(inSection: 0) - 1
 		let lastItemIndexPath = IndexPath(item: lastItem, section: 0)
 		collectionViewWeather.collectionView.scrollToItem(at: lastItemIndexPath, at: .right, animated: true)
 	}
-	@objc func swipeDownPressed() {
+	@objc private func swipeDownPressed() {
 		print("swipeDownPressed")
 	}
-	@objc func optionsButtonPressed() {
+	@objc private func optionsButtonPressed() {
 		print("optionsButtonPressed")
 		let greenVC = GreenViewController()
 		navigationController?.pushViewController(greenVC, animated: true)
@@ -93,6 +83,18 @@ final class HomeViewController: UIViewController {
 		let profileVC = ModalViewController()
 		profileVC.modalPresentationStyle = .fullScreen
 		present(profileVC, animated: true, completion: nil)
+	}
+	
+	// MARK: - Configure
+	private func fetchWeatherData() {
+		APICaller.shared.getWeather(forCities: cities) { result in
+			switch result {
+			case .success(let weatherData):
+				print(weatherData)
+			case .failure(let error):
+				print("Failed to get weather data:", error.localizedDescription)
+			}
+		}
 	}
 	
 	// MARK: - Constraints

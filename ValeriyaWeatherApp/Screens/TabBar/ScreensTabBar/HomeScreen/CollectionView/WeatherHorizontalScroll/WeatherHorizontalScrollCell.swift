@@ -11,16 +11,15 @@ final class WeatherHorizontalScrollCell: UICollectionViewCell {
 	static let identifier = "CollectionViewCellCell"
 	
 	// MARK: - Constants
-	let imageViewWeather: UIImageView = {
+	private let imageViewWeather: UIImageView = {
 		let imageView = UIImageView()
 		imageView.contentMode = .scaleAspectFill
 		imageView.clipsToBounds = true
 		return imageView
 	}()
 
-	private let temperatureLabel = UILabel.makeMediumLabel(text: "30°C", fontSize: 15, textColor: .white)
-	
-	let timeLabel = UILabel.makeSemiBoldLabel(text: "", fontSize: 15, textColor: .white)
+	private let temperatureLabel = UILabel.makeMediumLabel(text: "", fontSize: 15, textColor: .white)
+	private let timeLabel = UILabel.makeSemiBoldLabel(text: "", fontSize: 15, textColor: .white)
 
 	// MARK: - SetUp UI
 	override init(frame: CGRect) {
@@ -32,6 +31,11 @@ final class WeatherHorizontalScrollCell: UICollectionViewCell {
 		fatalError("init(coder:) has not been implemented")
 	}
 	
+	func configure(with model: WeatherViewModelCityTime) {
+		temperatureLabel.text = "\(model.temperature)°C"
+		timeLabel.text = "\(model.hour):00"
+	}
+
 	// MARK: - Constraints
 	private func setConstraints() {
 		imageViewWeather.snp.makeConstraints { image in

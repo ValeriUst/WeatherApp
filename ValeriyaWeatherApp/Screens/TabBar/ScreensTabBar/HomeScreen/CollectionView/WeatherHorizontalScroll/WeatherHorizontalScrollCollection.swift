@@ -8,8 +8,8 @@ import SnapKit
 final class WeatherHorizontalScrollCollection: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 	
 	// MARK: - Constants
-	private let images = ["11", "22", "33", "44", "55", "66", "77"]
-	private let labels = ["Now", "1:00PM", "2:00PM", "3:00PM", "4:00PM", "5:00PM", "6:00PM"]
+	var weatherData: [WeatherViewModelCityTime] = []
+
 
 	// MARK: - Content Views
 	private let layout: UICollectionViewFlowLayout = {
@@ -32,27 +32,47 @@ final class WeatherHorizontalScrollCollection: UICollectionViewController, UICol
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupCollectionView()
+		fetchWeatherData()
+		
 	}
-
+	private func fetchWeatherData() {
+		APICaller.shared.getWeather(forCities: cities) { [weak self] result in
+			switch result {
+			case .success(let weatherModels):
+				let allWeatherData = weatherModels.flatMap { weatherModel -> [WeatherViewModelCityTime] in
+					return weatherModel.forecasts?.flatMap { forecast -> [WeatherViewModelCityTime] in
+						return forecast.hours.map { hour in
+							return WeatherViewModelCityTime(hour: hour.hour ?? "", temperature: hour.temp ?? 0)
+						} ?? []
+					} ?? []
+				}
+				self?.weatherData = allWeatherData
+				DispatchQueue.main.async {
+					self?.collectionView.reloadData()
+				}
+			case .failure(let error):
+				print("Failed to fetch weather data: \(error)")
+			}
+		}
+	}
+	
 	// MARK: - UICollectionViewDataSource
 	override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return images.count
+		return weatherData.count
 	}
 	
 	override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeatherHorizontalScrollCell.identifier,
-															for: indexPath) as? WeatherHorizontalScrollCell else {
+		guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeatherHorizontalScrollCell.identifier, for: indexPath) as? WeatherHorizontalScrollCell else {
 			return UICollectionViewCell()
 		}
+		// Получите объект WeatherViewModelCityTime для текущего индекса
+		let weatherViewModel = weatherData[indexPath.row]
+		// Настройте ячейку с использованием данных из объекта WeatherViewModelCityTime
+		cell.configure(with: weatherViewModel)
+		
 		cell.layer.cornerRadius = 16
 		cell.layer.masksToBounds = false
 		cell.backgroundColor = UIColor(named: "purpleLight")
-		let imageName = images[indexPath.item]
-		cell.imageViewWeather.image = UIImage(named: imageName)
-		
-		let label = labels[indexPath.item]
-		cell.timeLabel.text = labels[indexPath.item]
-		
 		return cell
 	}
 	

@@ -13,7 +13,7 @@ final class ModalViewController: UIViewController {
 	let button = UIButton()
 	button.setImage(UIImage(systemName: "xmark"), for: .normal)
 	button.tintColor = .white
-	button.addTarget(self, action: #selector(swipeDownPressed), for: .touchUpInside)
+	button.addTarget(self, action: #selector(closeButtonPressed), for: .touchUpInside)
 	return button
 }()
 	
@@ -25,7 +25,7 @@ final class ModalViewController: UIViewController {
 		setConstraints()
 	}
 
-	@objc func swipeDownPressed() {
+	@objc func closeButtonPressed() {
 		dismiss(animated: true, completion: nil)
 	}
 	

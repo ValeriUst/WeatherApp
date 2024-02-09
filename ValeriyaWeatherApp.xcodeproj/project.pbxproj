@@ -83,6 +83,38 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6427EFC12B7619ED00932732 /* MainScreen */ = {
+			isa = PBXGroup;
+			children = (
+				647435922B72745400D76ACB /* MainTabBarViewController.swift */,
+			);
+			path = MainScreen;
+			sourceTree = "<group>";
+		};
+		6427EFC22B761A0000932732 /* SearchScreen */ = {
+			isa = PBXGroup;
+			children = (
+				647435C12B727E5900D76ACB /* SearchViewController.swift */,
+			);
+			path = SearchScreen;
+			sourceTree = "<group>";
+		};
+		6427EFC32B761A1500932732 /* CompasScreen */ = {
+			isa = PBXGroup;
+			children = (
+				647435C32B727E9700D76ACB /* CompassViewController.swift */,
+			);
+			path = CompasScreen;
+			sourceTree = "<group>";
+		};
+		6427EFC42B761A2300932732 /* SettingScreen */ = {
+			isa = PBXGroup;
+			children = (
+				647435C52B727E9F00D76ACB /* SettingViewController.swift */,
+			);
+			path = SettingScreen;
+			sourceTree = "<group>";
+		};
 		647435822B72745400D76ACB = {
 			isa = PBXGroup;
 			children = (
@@ -200,10 +232,10 @@
 			isa = PBXGroup;
 			children = (
 				6492DC9D2B74C8C7008E177A /* HomeScreen */,
-				647435922B72745400D76ACB /* MainTabBarViewController.swift */,
-				647435C12B727E5900D76ACB /* SearchViewController.swift */,
-				647435C32B727E9700D76ACB /* CompassViewController.swift */,
-				647435C52B727E9F00D76ACB /* SettingViewController.swift */,
+				6427EFC12B7619ED00932732 /* MainScreen */,
+				6427EFC22B761A0000932732 /* SearchScreen */,
+				6427EFC32B761A1500932732 /* CompasScreen */,
+				6427EFC42B761A2300932732 /* SettingScreen */,
 			);
 			path = ScreensTabBar;
 			sourceTree = "<group>";
@@ -230,9 +262,9 @@
 			isa = PBXGroup;
 			children = (
 				647435BF2B727E4D00D76ACB /* HomeViewController.swift */,
+				6492DC972B74B4DA008E177A /* CollectionView */,
 				6427EFBD2B75BC3C00932732 /* ModalViewController.swift */,
 				6427EFBF2B75C0DB00932732 /* GreenViewController.swift */,
-				6492DC972B74B4DA008E177A /* CollectionView */,
 			);
 			path = HomeScreen;
 			sourceTree = "<group>";
