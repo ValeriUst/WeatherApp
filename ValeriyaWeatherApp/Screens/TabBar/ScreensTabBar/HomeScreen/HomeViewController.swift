@@ -56,11 +56,22 @@ final class HomeViewController: UIViewController {
 		scrollView.addSubview(viewContainer)
 		viewContainer.addSubviews([headImage, personButton, swipeDownButton, optionsButton, nameCityLabel, dateLabel, temperatureLabel, precipitationLabel, swipeDownLabel, todayLabel, swipeRightButton,collectionViewCity.view, collectionViewWeather.view])
 		setConstraints()
+		
+		
+		// Вызов функции получения погоды и вывод в консоль
+		APICaller.shared.getWeather { result in
+			switch result {
+			case .success(let weather):
+				print("Weather: \(weather)")
+			case .failure(let error):
+				print("Failed to get weather data: \(error)")
+			}
+		}
     }
 	override func viewWillAppear(_ animated: Bool) {
 		self.navigationController?.isNavigationBarHidden = true
 	}
-	
+
 	//MARK: - Methods
 	// Прокрутка скролла в конец
 	@objc func swipeRightPressed() {
