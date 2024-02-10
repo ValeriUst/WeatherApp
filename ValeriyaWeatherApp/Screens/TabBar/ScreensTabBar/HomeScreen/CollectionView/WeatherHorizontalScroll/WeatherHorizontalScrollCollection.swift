@@ -53,7 +53,7 @@ final class WeatherHorizontalScrollCollection: UICollectionViewController,
 				self.weatherData = weatherModels
 					.compactMap { $0?.forecasts }
 					.flatMap { $0 }
-					.compactMap { $0.hours.map { WeatherViewModelCityTime(hour: $0.hour ?? "", temperature: $0.temp ?? 0) } }
+					.compactMap { $0.hours.map { WeatherViewModelCityTime(hour: $0.hour ?? "", temperature: $0.temp ?? 0, icon: $0.icon ?? "") } }
 					.flatMap { $0 }
 				
 				DispatchQueue.main.async {

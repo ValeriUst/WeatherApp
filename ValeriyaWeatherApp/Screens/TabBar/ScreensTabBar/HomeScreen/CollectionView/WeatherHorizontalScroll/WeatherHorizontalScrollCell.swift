@@ -4,6 +4,8 @@
 
 import UIKit
 import SnapKit
+import SDWebImage
+import SDWebImageSVGCoder
 
 final class WeatherHorizontalScrollCell: UICollectionViewCell {
 	
@@ -37,6 +39,13 @@ final class WeatherHorizontalScrollCell: UICollectionViewCell {
 	func configure(with model: WeatherViewModelCityTime){
 		temperatureLabel.text = "\(model.temperature)"
 		timeLabel.text = "\(model.hour):00"
+		if let iconURLString = model.icon, let iconURL = URL(string: "https://yastatic.net/weather/i/icons/funky/dark/\(iconURLString).svg") {
+			imageViewWeather.sd_setImage(with: iconURL,
+										 placeholderImage: nil,
+										 context: [.imageCoder: CustomSVGDecoder(fallbackDecoder: SDImageSVGCoder.shared)])
+		} else {
+			imageViewWeather.image = UIImage(named: "11")
+		}
 	}
 
 	// MARK: - Constraints

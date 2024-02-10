@@ -23,11 +23,11 @@ struct WeatherViewModelCity {
 struct WeatherViewModelCityTime {
 	let hour: String
 	let temperature: Int
-	//let icon: String?
+	let icon: String?
 	
-	init(hour: String?, temperature: Int?) {
+	init(hour: String?, temperature: Int?, icon: String?) {
 		self.hour = hour ?? ""
 		self.temperature = temperature ?? 0
-		//self.icon = icon ?? ""
+		self.icon = icon ?? ""
 	}
 }
