@@ -5,16 +5,14 @@
 import UIKit
 import SnapKit
 
-final class WeatherHorizontalScrollCollection: UICollectionViewController, 
-												UICollectionViewDelegateFlowLayout {
+final class WeatherHorizontalScrollCollection: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 	
 	// MARK: - Constants
-	var weatherData: [WeatherModel?] = [WeatherModel]()
-	
+		
 	private var weatherViewModel: [WeatherViewModelCity] = []
 
 	private let collectionViewCity = CityHorizontalScrollCollection(collectionViewLayout: UICollectionViewFlowLayout())
-	
+
 	// MARK: - Content Views
 	private let layout: UICollectionViewFlowLayout = {
 		let layout = UICollectionViewFlowLayout()
@@ -30,6 +28,11 @@ final class WeatherHorizontalScrollCollection: UICollectionViewController,
 		collectionView.collectionViewLayout = layout
 		collectionView.register(WeatherHorizontalScrollCell.self,
 								forCellWithReuseIdentifier: WeatherHorizontalScrollCell.identifier)
+	}
+	
+	func update(with weatherViewModel: [WeatherViewModelCity]) {
+		self.weatherViewModel = weatherViewModel
+		collectionView.reloadData()
 	}
 	
 	// MARK: - Lifecycle
@@ -49,8 +52,10 @@ final class WeatherHorizontalScrollCollection: UICollectionViewController,
 															for: indexPath) as? WeatherHorizontalScrollCell else {
 			return UICollectionViewCell()
 		}
+		
 		let weatherViewModel = weatherViewModel[indexPath.item]
-		cell.configure(with: weatherViewModel)
+		cell.configure(with: weatherViewModel, atIndex: indexPath.item)
+		
 		cell.layer.cornerRadius = 16
 		cell.layer.masksToBounds = false
 		cell.backgroundColor = UIColor(named: "purpleLight")
@@ -66,9 +71,13 @@ final class WeatherHorizontalScrollCollection: UICollectionViewController,
 // MARK: - Extension CitySelectionDelegate
 extension WeatherHorizontalScrollCollection: CitySelectionDelegate {
 	func didSelectCity(_ model: WeatherViewModelCity) {
+		print("Выбран городfffff: \(model.nameCity)")
 		
-		//
-		
-		collectionView.reloadData()
+		if let index = weatherViewModel.firstIndex(where: { $0.nameCity == model.nameCity }) {
+			let indexPath = IndexPath(row: index, section: 0)
+			if let cell = collectionView.cellForItem(at: indexPath) as? WeatherHorizontalScrollCell {
+				cell.configure(with: model, atIndex: index)
+			}
+		}
 	}
 }

@@ -9,11 +9,11 @@ protocol CitySelectionDelegate: AnyObject {
 	func didSelectCity(_ model: WeatherViewModelCity)
 }
 
-final class CityHorizontalScrollCollection: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+final class CityHorizontalScrollCollection: UICollectionViewController, 
+												UICollectionViewDelegateFlowLayout {
 	
 	// MARK: - Constants
-	var weatherData: [WeatherModel] = []
-
+	
 	private var weatherViewModel: [WeatherViewModelCity] = []
 	
 	// MARK: - Public Properties
@@ -34,6 +34,11 @@ final class CityHorizontalScrollCollection: UICollectionViewController, UICollec
 		collectionView.showsHorizontalScrollIndicator = false
 		collectionView.register(CityHorizontalScrollCell.self,
 								forCellWithReuseIdentifier: CityHorizontalScrollCell.identifier)
+	}
+	
+	func update(with weatherViewModel: [WeatherViewModelCity]) {
+		self.weatherViewModel = weatherViewModel
+		collectionView.reloadData()
 	}
 	
 	// MARK: - Lifecycle

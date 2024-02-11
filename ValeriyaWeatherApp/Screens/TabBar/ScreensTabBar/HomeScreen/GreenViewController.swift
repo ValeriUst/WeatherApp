@@ -7,6 +7,7 @@ import UIKit
 final class GreenViewController: UIViewController {
 	
 	// MARK: - Content Views
+	
 	private let closeButton: UIButton = {
 		let button = UIButton()
 		button.setImage(UIImage(systemName: "xmark"), for: .normal)
@@ -16,6 +17,7 @@ final class GreenViewController: UIViewController {
 	}()
 	
 	// MARK: - Lifecycle
+	
     override func viewDidLoad() {
         super.viewDidLoad()
 		view.backgroundColor = .green
@@ -24,11 +26,13 @@ final class GreenViewController: UIViewController {
     }
 	
 	//MARK: - Methods
+	
 	@objc private func backButtonTapped() {
 		navigationController?.popViewController(animated: true)
 	}
 	
 	// MARK: - Constraints
+	
 	private func setConstraints() {
 		closeButton.snp.makeConstraints { button in
 			button.top.equalToSuperview().offset(60)

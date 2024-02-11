@@ -13,21 +13,21 @@ struct WeatherViewModelCity {
 	let tempMin: Int
 	let tempMax: Int
 	
-	let hour: String
-	let tempHour: Int
-	let icon: String
+	let hour: [Hour]
+	let tempHour: [Hour]
+	let icon: [Hour]?
 
-	init(model: WeatherModel) {
+	init(model: WeatherModel, cityIndex: Int) {
 		self.nameCity = model.geoObject?.locality.name ?? ""
 		self.temper = model.fact?.temp ?? 0
 		self.condition = model.fact?.condition ?? ""
 		self.time = model.now ?? 0
 		
 		self.tempMax = model.forecasts.first?.parts.day?.tempMax ?? 0
-		self.tempMin = model.forecasts.first?.parts.day?.tempMin ?? 0
+		self.tempMin = model.forecasts.first?.parts.night?.tempMin ?? 0
 		
-		self.hour = model.forecasts.first?.hours.first?.hour ?? ""
-		self.tempHour = model.forecasts.first?.hours.first?.temp ?? 0
-		self.icon = model.forecasts.first?.hours.first?.icon ?? ""
+		self.hour = model.forecasts.first?.hours ?? []
+		self.tempHour = model.forecasts.first?.hours ?? []
+		self.icon = model.forecasts.first?.hours ?? []
 	}
 }

@@ -8,8 +8,7 @@ import SnapKit
 final class HomeViewController: UIViewController {
 	
 	// MARK: - Constants
-	var weatherData: [WeatherModel?] = []
-		
+	
 	private var weatherViewModelCity: WeatherViewModelCity?
 
 	private let collectionViewCity = CityHorizontalScrollCollection(collectionViewLayout: UICollectionViewFlowLayout())
@@ -71,6 +70,7 @@ final class HomeViewController: UIViewController {
 		viewContainer.addSubviews([headImage, personButton, swipeDownButton, optionsButton, nameCityLabel, dateLabel, temperatureTodayLabel, temperatureLabel, precipitationLabel, swipeDownLabel, todayLabel, swipeRightButton,collectionViewCity.view, collectionViewWeather.view])
 		setConstraints()
 		collectionViewCity.delegate = self
+		collectionViewCity.delegate = collectionViewWeather
 		fetchWeatherData()
     }
 	
@@ -85,13 +85,13 @@ final class HomeViewController: UIViewController {
 			case .success(let weatherData):
 				print(weatherData)
 				
-				self.collectionViewCity.weatherData = weatherData
-				
-				self.collectionViewWeather.weatherData = weatherData
-			
+				let weatherViewModels = weatherData.enumerated().compactMap { index, weatherModel -> WeatherViewModelCity? in
+					guard let weatherModel = weatherModel else { return nil }
+					return WeatherViewModelCity(model: weatherModel, cityIndex: index)
+				}
 				DispatchQueue.main.async {
-					self.collectionViewCity.reloadData()
-					self.collectionViewWeather.reloadData()
+					self.collectionViewCity.update(with: weatherViewModels)
+					self.collectionViewWeather.update(with: weatherViewModels)
 				}
 			case .failure(let error):
 				print("Failed to fetch detailed weather data:", error)
@@ -210,7 +210,8 @@ extension HomeViewController: CitySelectionDelegate {
 		nameCityLabel.text = model.nameCity
 		temperatureLabel.text = "\(model.temper)°C"
 		precipitationLabel.text = model.condition.capitalized
-		temperatureLabel.text = "\(model.tempMin)°C/\(model.tempMax)°C"
+		temperatureLabel.text = "\(model.temper)"
+		temperatureTodayLabel.text = "\(model.tempMin)°C/\(model.tempMax)°C"
 		
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "dd MMM EEE"

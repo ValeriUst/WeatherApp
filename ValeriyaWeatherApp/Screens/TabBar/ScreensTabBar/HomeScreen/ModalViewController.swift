@@ -7,6 +7,7 @@ import UIKit
 final class ModalViewController: UIViewController {
 	
 	// MARK: - Content
+	
 	private let helloLabel = UILabel.makeLabel(text: "Hello World!", fontSize: 30, font: .poppinsSemiBold(size: 30), textColor: .white)
 
 	private let closeButton: UIButton = {
@@ -26,11 +27,13 @@ final class ModalViewController: UIViewController {
 	}
 	
 	//MARK: - Methods
+	
 	@objc private func closeButtonPressed() {
 		dismiss(animated: true, completion: nil)
 	}
 	
 	// MARK: - Constraints
+	
 	private func setConstraints() {
 		helloLabel.snp.makeConstraints { label in
 			label.centerX.equalToSuperview()

@@ -11,7 +11,7 @@ final class WeatherHorizontalScrollCell: UICollectionViewCell {
 	
 	// MARK: - Constants
 	static let identifier = "CollectionViewCellCell"
-	
+		
 	// MARK: - Constants
 	private let imageViewWeather: UIImageView = {
 		let imageView = UIImageView()
@@ -36,11 +36,12 @@ final class WeatherHorizontalScrollCell: UICollectionViewCell {
 	}
 	
 	// MARK: - ConfigureCell
-	func configure(with model: WeatherViewModelCity){
-		temperatureLabel.text = "\(model.tempHour)"
-		timeLabel.text = "\(model.hour):00"
+	func configure(with model: WeatherViewModelCity, atIndex index: Int) {
 		
-		if let iconURLString = model.icon {
+		temperatureLabel.text = "\(model.hour[index].temp)"
+		timeLabel.text = "\(model.hour[index].hour):00"
+		
+		if let iconURLString = model.icon?[index].icon {
 			let iconURL = URL(string: "https://yastatic.net/weather/i/icons/funky/dark/\(iconURLString).svg")
 			imageViewWeather.sd_setImage(with: iconURL,
 										 placeholderImage: nil,
@@ -49,12 +50,29 @@ final class WeatherHorizontalScrollCell: UICollectionViewCell {
 			imageViewWeather.image = UIImage(named: "11")
 		}
 	}
+	
+//	func configure(with model: WeatherViewModelCity, atIndex index: Int) {
+//		temperatureLabel.text = "\(model.hour)"
+//		timeLabel.text = "\(model.hour):00"
+//		
+//		if let iconURLString = model.icon {
+//			let iconURL = URL(string: "https://yastatic.net/weather/i/icons/funky/dark/\(iconURLString).svg")
+//			imageViewWeather.sd_setImage(with: iconURL,
+//										 placeholderImage: nil,
+//										 context: [.imageCoder: CustomSVGDecoder(fallbackDecoder: SDImageSVGCoder.shared)])
+//		} else {
+//			imageViewWeather.image = UIImage(named: "11")
+//		}
+//	}
 
 	// MARK: - Constraints
+	
 	private func setConstraints() {
 		imageViewWeather.snp.makeConstraints { image in
 			image.top.equalToSuperview().offset(12)
 			image.centerX.equalToSuperview()
+			image.height.equalTo(30)
+			image.width.equalTo(30)
 		}
 		temperatureLabel.snp.makeConstraints { label in
 			label.centerX.equalToSuperview()
