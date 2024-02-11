@@ -5,10 +5,11 @@
 import UIKit
 import SnapKit
 
-final class HomeViewController: UIViewController, CitySelectionDelegate {
+final class HomeViewController: UIViewController {
 	
 	// MARK: - Constants
-	
+	var weatherData: [WeatherModel?] = []
+		
 	private var weatherViewModelCity: WeatherViewModelCity?
 
 	private let collectionViewCity = CityHorizontalScrollCollection(collectionViewLayout: UICollectionViewFlowLayout())
@@ -83,32 +84,21 @@ final class HomeViewController: UIViewController, CitySelectionDelegate {
 			switch result {
 			case .success(let weatherData):
 				print(weatherData)
+				
+				self.collectionViewCity.weatherData = weatherData
+				
+				self.collectionViewWeather.weatherData = weatherData
+			
+				DispatchQueue.main.async {
+					self.collectionViewCity.reloadData()
+					self.collectionViewWeather.reloadData()
+				}
 			case .failure(let error):
 				print("Failed to fetch detailed weather data:", error)
 			}
 		}
 	}
-	
-	// MARK: - Configure
-	func didSelectCity(_ model: WeatherViewModelCity) {
-		print("Выбран город: \(model.nameCity)")
 
-		nameCityLabel.text = model.nameCity
-		temperatureLabel.text = "\(model.temper)°C"
-		precipitationLabel.text = model.condition.capitalized
-		
-		if let tempMin = model.dayNight.first?.parts.night.tempMin,
-		   let tempMax = model.dayNight.first?.parts.day.tempMax {
-			temperatureTodayLabel.text = "\(tempMin)°C/\(tempMax)°C"
-		}
-		
-		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = "dd MMM EEE"
-		let dateString = dateFormatter.string(from: Date(timeIntervalSince1970: TimeInterval(model.time)))
-		
-		dateLabel.text = dateString
-	}
-	
 	//MARK: - Methods
 	
 	// Прокрутка скролла в конец
@@ -207,5 +197,25 @@ final class HomeViewController: UIViewController, CitySelectionDelegate {
 			button.centerY.equalTo(collectionViewWeather.view.snp.centerY)
 			button.trailing.equalTo(viewContainer.snp.trailing).offset(-5)
 		}
+	}
+}
+
+// MARK: - Extension CitySelectionDelegate
+extension HomeViewController: CitySelectionDelegate {
+	
+	func didSelectCity(_ model: WeatherViewModelCity) {
+		
+		print("Выбран город: \(model.nameCity)")
+		
+		nameCityLabel.text = model.nameCity
+		temperatureLabel.text = "\(model.temper)°C"
+		precipitationLabel.text = model.condition.capitalized
+		temperatureLabel.text = "\(model.tempMin)°C/\(model.tempMax)°C"
+		
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "dd MMM EEE"
+		let dateString = dateFormatter.string(from: Date(timeIntervalSince1970: TimeInterval(model.time)))
+		
+		dateLabel.text = dateString
 	}
 }

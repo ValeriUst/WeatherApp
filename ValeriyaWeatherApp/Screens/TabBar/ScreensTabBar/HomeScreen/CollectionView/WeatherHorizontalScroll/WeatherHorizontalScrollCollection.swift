@@ -6,17 +6,13 @@ import UIKit
 import SnapKit
 
 final class WeatherHorizontalScrollCollection: UICollectionViewController, 
-												UICollectionViewDelegateFlowLayout,
-												AnotherCitySelectionDelegate {
-	private var selectedCityName: String?
-	
-	func didSelectCityA(_ model: WeatherViewModelCity) {
-		print("Выбран город ЧАСЫ: \(model.nameCity)")
-	}
+												UICollectionViewDelegateFlowLayout {
 	
 	// MARK: - Constants
-	private var weatherData: [WeatherViewModelCityTime] = []
+	var weatherData: [WeatherModel?] = [WeatherModel]()
 	
+	private var weatherViewModel: [WeatherViewModelCity] = []
+
 	private let collectionViewCity = CityHorizontalScrollCollection(collectionViewLayout: UICollectionViewFlowLayout())
 	
 	// MARK: - Content Views
@@ -40,34 +36,12 @@ final class WeatherHorizontalScrollCollection: UICollectionViewController,
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupCollectionView()
-		collectionViewCity.delegateA = self
-		fetchWeatherData()
+		collectionViewCity.delegate = self
 	}
 	
-	// MARK: - Configure
-	private func fetchWeatherData() {
-		APICaller.shared.getWeather(forCities: cities) { [weak self] result in
-			guard let self = self else { return }
-			switch result {
-			case .success(let weatherModels):
-				self.weatherData = weatherModels
-					.compactMap { $0?.forecasts }
-					.flatMap { $0 }
-					.compactMap { $0.hours.map { WeatherViewModelCityTime(hour: $0.hour ?? "", temperature: $0.temp ?? 0, icon: $0.icon ?? "") } }
-					.flatMap { $0 }
-				
-				DispatchQueue.main.async {
-					self.collectionView.reloadData()
-				}
-			case .failure(let error):
-				print("Failed to fetch weather data: \(error)")
-			}
-		}
-	}
-
 	// MARK: - UICollectionViewDataSource
 	override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return weatherData.count
+		return weatherViewModel.count
 	}
 	
 	override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -75,7 +49,7 @@ final class WeatherHorizontalScrollCollection: UICollectionViewController,
 															for: indexPath) as? WeatherHorizontalScrollCell else {
 			return UICollectionViewCell()
 		}
-		let weatherViewModel = weatherData[indexPath.item]
+		let weatherViewModel = weatherViewModel[indexPath.item]
 		cell.configure(with: weatherViewModel)
 		cell.layer.cornerRadius = 16
 		cell.layer.masksToBounds = false
@@ -86,5 +60,15 @@ final class WeatherHorizontalScrollCollection: UICollectionViewController,
 	// MARK: - UICollectionViewDelegateFlowLayout
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		return CGSize(width: 76, height: 76)
+	}
+}
+
+// MARK: - Extension CitySelectionDelegate
+extension WeatherHorizontalScrollCollection: CitySelectionDelegate {
+	func didSelectCity(_ model: WeatherViewModelCity) {
+		
+		//
+		
+		collectionView.reloadData()
 	}
 }

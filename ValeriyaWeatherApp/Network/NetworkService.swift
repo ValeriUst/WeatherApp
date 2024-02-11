@@ -58,7 +58,7 @@ final class APICaller {
 				
 				do {
 					let result = try JSONDecoder().decode(WeatherModel.self, from: data)
-					resultsArray[index] = result // Заполняем массив по индексу
+					resultsArray[index] = result
 				} catch {
 					print("Failed to decode weather data:", error.localizedDescription)
 					completion(.failure(APIError.failedToDecodeData))

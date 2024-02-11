@@ -9,25 +9,25 @@ struct WeatherViewModelCity {
 	let temper: Int
 	let condition: String
 	let time: Int
-	let dayNight: [Forecast]
+	
+	let tempMin: Int
+	let tempMax: Int
+	
+	let hour: String
+	let tempHour: Int
+	let icon: String
 
 	init(model: WeatherModel) {
 		self.nameCity = model.geoObject?.locality.name ?? ""
 		self.temper = model.fact?.temp ?? 0
 		self.condition = model.fact?.condition ?? ""
 		self.time = model.now ?? 0
-		self.dayNight = model.forecasts
-	}
-}
-
-struct WeatherViewModelCityTime {
-	let hour: String
-	let temperature: Int
-	let icon: String?
-	
-	init(hour: String?, temperature: Int?, icon: String?) {
-		self.hour = hour ?? ""
-		self.temperature = temperature ?? 0
-		self.icon = icon ?? ""
+		
+		self.tempMax = model.forecasts.first?.parts.day?.tempMax ?? 0
+		self.tempMin = model.forecasts.first?.parts.day?.tempMin ?? 0
+		
+		self.hour = model.forecasts.first?.hours.first?.hour ?? ""
+		self.tempHour = model.forecasts.first?.hours.first?.temp ?? 0
+		self.icon = model.forecasts.first?.hours.first?.icon ?? ""
 	}
 }

@@ -36,10 +36,12 @@ final class WeatherHorizontalScrollCell: UICollectionViewCell {
 	}
 	
 	// MARK: - ConfigureCell
-	func configure(with model: WeatherViewModelCityTime){
-		temperatureLabel.text = "\(model.temperature)"
+	func configure(with model: WeatherViewModelCity){
+		temperatureLabel.text = "\(model.tempHour)"
 		timeLabel.text = "\(model.hour):00"
-		if let iconURLString = model.icon, let iconURL = URL(string: "https://yastatic.net/weather/i/icons/funky/dark/\(iconURLString).svg") {
+		
+		if let iconURLString = model.icon {
+			let iconURL = URL(string: "https://yastatic.net/weather/i/icons/funky/dark/\(iconURLString).svg")
 			imageViewWeather.sd_setImage(with: iconURL,
 										 placeholderImage: nil,
 										 context: [.imageCoder: CustomSVGDecoder(fallbackDecoder: SDImageSVGCoder.shared)])

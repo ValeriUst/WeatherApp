@@ -25,8 +25,8 @@ struct GeoObject: Codable {
 
 // MARK: - Country
 struct Country: Codable {
-	let id: Int
-	let name: String
+	let id: Int?
+	let name: String?
 }
 
 // MARK: - Fact
@@ -68,8 +68,8 @@ struct Hour: Codable {
 
 // MARK: - Parts
 struct Parts: Codable {
-	let night: Day
-	let day: Day
+	let night: Day?
+	let day: Day?
 	
 	enum CodingKeys: String, CodingKey {
 		case night
