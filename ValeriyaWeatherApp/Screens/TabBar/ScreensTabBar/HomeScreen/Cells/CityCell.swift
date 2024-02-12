@@ -1,14 +1,14 @@
-//  CityHorizontalScrollCell.swift
+//  CityCell.swift
 //  ValeriyaWeatherApp
 //  Created by Валерия Устименко on 08.02.2024.
 
 import UIKit
 import SnapKit
 
-final class CityHorizontalScrollCell: UICollectionViewCell {
+final class CityCell: UICollectionViewCell {
 	
 	// MARK: - Constants
-	static let identifier = "CollectionViewCellCell"
+	static let identifier = "CityCell"
 	
 	// MARK: - Constants
 	private let imageViewCity: UIImageView = {
@@ -34,11 +34,12 @@ final class CityHorizontalScrollCell: UICollectionViewCell {
 	}
 	
 	// MARK: - Configure Cell
-	func configure(with model: WeatherViewModelCity) {
-		temperatureLabel.text = "\(model.temper)°C"
-		nameCityLabel.text = model.nameCity
+	
+	func configure(with model: WeatherModel) {
+		temperatureLabel.text = "\(model.fact?.temp ?? 0)°C"
+		nameCityLabel.text = model.geoObject?.locality.name ?? ""
 		
-		switch model.condition {
+		switch model.fact?.condition ?? "" {
 		case "clear":
 			imageViewCity.image = UIImage(named: "sun")
 		case "partly-cloudy":

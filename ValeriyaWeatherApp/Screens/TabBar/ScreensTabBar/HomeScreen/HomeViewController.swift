@@ -8,14 +8,14 @@ import SnapKit
 final class HomeViewController: UIViewController {
 	
 	// MARK: - Constants
+	private var weatherData: [WeatherModel] = [WeatherModel]()
 	
-	private var weatherViewModelCity: WeatherViewModelCity?
-
-	private let collectionViewCity = CityHorizontalScrollCollection(collectionViewLayout: UICollectionViewFlowLayout())
+	private let numberOfCopies = 50  // Количество копий элементов
 	
-	private let collectionViewWeather = WeatherHorizontalScrollCollection(collectionViewLayout: UICollectionViewFlowLayout())
+	var selectedIndex:IndexPath?
 
 	// MARK: - Content
+
 	private let scrollView: UIScrollView = {
 		let scroll = UIScrollView()
 		scroll.contentInsetAdjustmentBehavior = .never
@@ -36,6 +36,17 @@ final class HomeViewController: UIViewController {
 		image.layer.cornerRadius = 30
 		return image
 	}()
+	
+	//UICollectionView
+	private let collectionViewCity = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+	
+	private let collectionViewWeatherHours = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+	
+	private func setupCollectionView() {
+		setupCollectionView(collectionView: collectionViewCity, cellType: CityCell.self)
+		
+		setupCollectionView(collectionView: collectionViewWeatherHours, cellType: WeatherHoursCell.self)
+	}
 	
 	//UILabels
 	private let swipeDownLabel = UILabel.makeLabel(text: "Swipe down for details", fontSize: 12, font: UIFont.robotoRegular(size: 12), textColor: .white)
@@ -67,10 +78,9 @@ final class HomeViewController: UIViewController {
 		view.backgroundColor = UIColor(named: "backPurple")
 		view.addSubview(scrollView)
 		scrollView.addSubview(viewContainer)
-		viewContainer.addSubviews([headImage, personButton, swipeDownButton, optionsButton, nameCityLabel, dateLabel, temperatureTodayLabel, temperatureLabel, precipitationLabel, swipeDownLabel, todayLabel, swipeRightButton,collectionViewCity.view, collectionViewWeather.view])
+		viewContainer.addSubviews([headImage, personButton, swipeDownButton, optionsButton, nameCityLabel, dateLabel, temperatureTodayLabel, temperatureLabel, precipitationLabel, swipeDownLabel, todayLabel, collectionViewCity, collectionViewWeatherHours, swipeRightButton])
+		setupCollectionView()
 		setConstraints()
-		collectionViewCity.delegate = self
-		collectionViewCity.delegate = collectionViewWeather
 		fetchWeatherData()
     }
 	
@@ -78,20 +88,36 @@ final class HomeViewController: UIViewController {
 		self.navigationController?.isNavigationBarHidden = true
 	}
 	
+	// MARK: - Configure
+	private func configure(with model: WeatherModel) {
+		nameCityLabel.text = model.geoObject?.locality.name
+		temperatureLabel.text = "\(model.fact?.temp ?? 0)°C"
+		precipitationLabel.text = model.fact?.condition?.capitalized ?? ""
+		temperatureTodayLabel.text = "\(model.forecasts.first?.parts.day?.tempMin ?? 0)°C/\(model.forecasts.first?.parts.day?.tempMax ?? 0)°C"
+
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "dd MMM EEE"
+		let dateString = dateFormatter.string(from: Date(timeIntervalSince1970: TimeInterval(model.now ?? 0)))
+
+		dateLabel.text = dateString
+		
+		collectionViewWeatherHours.reloadData()
+
+	}
+	
 	private func fetchWeatherData() {
 		APICaller.shared.getWeather(forCities: cities) { [weak self] result in
 			guard let self = self else { return }
 			switch result {
 			case .success(let weatherData):
+				
 				print(weatherData)
 				
-				let weatherViewModels = weatherData.enumerated().compactMap { index, weatherModel -> WeatherViewModelCity? in
-					guard let weatherModel = weatherModel else { return nil }
-					return WeatherViewModelCity(model: weatherModel, cityIndex: index)
-				}
+				self.weatherData = weatherData.compactMap { $0 }
+				
 				DispatchQueue.main.async {
-					self.collectionViewCity.update(with: weatherViewModels)
-					self.collectionViewWeather.update(with: weatherViewModels)
+					self.collectionViewCity.reloadData()
+					self.collectionViewWeatherHours.reloadData()
 				}
 			case .failure(let error):
 				print("Failed to fetch detailed weather data:", error)
@@ -103,9 +129,9 @@ final class HomeViewController: UIViewController {
 	
 	// Прокрутка скролла в конец
 	@objc private func swipeRightPressed() {
-		let lastItem = collectionViewWeather.collectionView.numberOfItems(inSection: 0) - 1
+		let lastItem = collectionViewWeatherHours.numberOfItems(inSection: 0) - 1
 		let lastItemIndexPath = IndexPath(item: lastItem, section: 0)
-		collectionViewWeather.collectionView.scrollToItem(at: lastItemIndexPath, at: .right, animated: true)
+		collectionViewWeatherHours.scrollToItem(at: lastItemIndexPath, at: .right, animated: true)
 	}
 	
 	@objc private func swipeDownPressed() {
@@ -122,6 +148,10 @@ final class HomeViewController: UIViewController {
 		let profileVC = ModalViewController()
 		profileVC.modalPresentationStyle = .fullScreen
 		present(profileVC, animated: true, completion: nil)
+	}
+	
+	private func arrayIndexForRow(_ row : Int)-> Int {
+		return row % weatherData.count
 	}
 
 	// MARK: - Constraints
@@ -177,46 +207,99 @@ final class HomeViewController: UIViewController {
 			label.top.equalTo(temperatureLabel.snp.bottom).offset(7)
 			label.trailing.equalTo(viewContainer.snp.trailing).offset(-25)
 		}
-		collectionViewCity.view.snp.makeConstraints { collectionView in
+		collectionViewCity.snp.makeConstraints { collectionView in
 			collectionView.top.equalTo(headImage.snp.bottom).offset(30)
 			collectionView.leading.equalTo(viewContainer.snp.leading)
 			collectionView.trailing.equalTo(viewContainer.snp.trailing)
 			collectionView.height.equalTo(215)
 		}
 		todayLabel.snp.makeConstraints { label in
-			label.top.equalTo(collectionViewCity.view.snp.bottom).offset(27)
+			label.top.equalTo(collectionViewCity.snp.bottom).offset(27)
 			label.leading.equalTo(viewContainer.snp.leading).offset(25)
 		}
-		collectionViewWeather.view.snp.makeConstraints { collectionView in
+		collectionViewWeatherHours.snp.makeConstraints { collectionView in
 			collectionView.top.equalTo(todayLabel.snp.bottom).offset(6)
 			collectionView.leading.equalTo(viewContainer.snp.leading)
 			collectionView.trailing.equalTo(viewContainer.snp.trailing).offset(-25)
 			collectionView.height.equalTo(115)
 		}
 		swipeRightButton.snp.makeConstraints { button in
-			button.centerY.equalTo(collectionViewWeather.view.snp.centerY)
+			button.centerY.equalTo(collectionViewWeatherHours.snp.centerY)
 			button.trailing.equalTo(viewContainer.snp.trailing).offset(-5)
 		}
 	}
 }
 
-// MARK: - Extension CitySelectionDelegate
-extension HomeViewController: CitySelectionDelegate {
+// MARK: - CollectionView Setup (UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout)
+extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+		if collectionView == collectionViewCity {
+			return weatherData.count * numberOfCopies
+		} else if collectionView == collectionViewWeatherHours {
+			return weatherData.count
+		}
+		return 0
+	}
 	
-	func didSelectCity(_ model: WeatherViewModelCity) {
+	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+		if collectionView == collectionViewCity {
+			guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CityCell.identifier, for: indexPath) as? CityCell else {
+				return UICollectionViewCell()
+			}
+			cell.layer.cornerRadius = 22
+			cell.layer.masksToBounds = true
+			
+			let arrayIndex = arrayIndexForRow(indexPath.row)
+			
+			let weatherViewModel = weatherData[arrayIndex]
+			
+			cell.configure(with: weatherViewModel)
+	
+			return cell
+			
+			
+		} else if collectionView == collectionViewWeatherHours {
+			guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeatherHoursCell.identifier, for: indexPath) as? WeatherHoursCell else {
+				return UICollectionViewCell()
+			}
+			let weatherModel = weatherData[indexPath.row]
+			
+			cell.configure(with: weatherModel)
+			
+			return cell
+		}
+		return UICollectionViewCell()
+	}
+	
+	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+		if collectionView == collectionViewCity {
+			let arrayIndex = arrayIndexForRow(indexPath.row)
+			let realIndex = arrayIndex % weatherData.count
+			let selectedCity = weatherData[realIndex]
+			
+			configure(with: selectedCity)
 		
-		print("Выбран город: \(model.nameCity)")
+ 			collectionViewWeatherHours.reloadData()
+		}
+	}
+	
+	// MARK: - UICollectionViewDelegateFlowLayout
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		
-		nameCityLabel.text = model.nameCity
-		temperatureLabel.text = "\(model.temper)°C"
-		precipitationLabel.text = model.condition.capitalized
-		temperatureLabel.text = "\(model.temper)"
-		temperatureTodayLabel.text = "\(model.tempMin)°C/\(model.tempMax)°C"
-		
-		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = "dd MMM EEE"
-		let dateString = dateFormatter.string(from: Date(timeIntervalSince1970: TimeInterval(model.time)))
-		
-		dateLabel.text = dateString
+		if collectionView == collectionViewCity {
+			return CGSize(width: 172, height: 215)
+			
+		} else if collectionView == collectionViewWeatherHours {
+			return CGSize(width: 76, height: 76)
+		}
+		return CGSize(width: 100, height: 100)
+	}
+}
+
+extension HomeViewController {
+	// Функция прокрутки до середины
+	func scrollToMiddle(atIndex: Int, animated: Bool = true) {
+		let middleIndex = atIndex + numberOfCopies * weatherData.count / 2
+		collectionViewCity.scrollToItem(at: IndexPath(item: middleIndex, section: 0), at: .centeredHorizontally, animated: animated)
 	}
 }
