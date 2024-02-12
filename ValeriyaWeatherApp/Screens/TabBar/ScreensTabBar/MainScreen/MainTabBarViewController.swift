@@ -28,8 +28,8 @@ final class MainTabBarViewController: UITabBarController {
 	
 	private func setTabBarAppearance() {
 		tabBar.tintColor = UIColor.white
-		tabBar.backgroundColor = UIColor(named: "purpleLight")
-		tabBar.unselectedItemTintColor = UIColor(named: "whiteLight")
-		tabBar.layer.cornerRadius = 10
+		tabBar.backgroundColor = Colors.purpleLight
+		tabBar.unselectedItemTintColor = Colors.whiteLight
+		tabBar.layer.cornerRadius = Constants.cornerRadiusTabbar
 	}
 }

@@ -31,12 +31,13 @@ struct Country: Codable {
 
 // MARK: - Fact
 struct Fact: Codable {
+	let uptime: Int?
 	let temp: Int?
 	let icon: String?
 	let condition: String?
 
 	enum CodingKeys: String, CodingKey {
-		case temp
+		case temp, uptime
 		case icon, condition
 	}
 }

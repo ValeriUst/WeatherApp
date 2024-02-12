@@ -12,8 +12,12 @@ final class HomeViewController: UIViewController {
 	
 	private let numberOfCopies = 50  // Количество копий элементов
 	
-	var selectedIndex:IndexPath?
-
+	private let section = 0  // Количество секций
+	
+	private let minusSection = 1
+	
+	private let startItem = 0
+	
 	// MARK: - Content
 
 	private let scrollView: UIScrollView = {
@@ -33,11 +37,11 @@ final class HomeViewController: UIViewController {
 		let image = UIImageView()
 		image.image = UIImage(named: "pdf")
 		image.contentMode = .scaleAspectFill
-		image.layer.cornerRadius = 30
+		image.layer.cornerRadius = Constants.cornerRadiusImage
 		return image
 	}()
 	
-	//UICollectionView
+	//UICollectionView + setup
 	private let collectionViewCity = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
 	
 	private let collectionViewWeatherHours = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
@@ -49,9 +53,9 @@ final class HomeViewController: UIViewController {
 	}
 	
 	//UILabels
-	private let swipeDownLabel = UILabel.makeLabel(text: "Swipe down for details", fontSize: 12, font: UIFont.robotoRegular(size: 12), textColor: .white)
+	private let swipeDownLabel = UILabel.makeLabel(text: Constants.swipeLabel, fontSize: 12, font: UIFont.robotoRegular(size: 12), textColor: .white)
 	
-	private let todayLabel = UILabel.makeLabel(text: "Today", fontSize: 20, font: .poppinsMedium(size: 20), textColor: .white)
+	private let todayLabel = UILabel.makeLabel(text: Constants.todayLabel, fontSize: 20, font: .poppinsMedium(size: 20), textColor: .white)
 	
 	private let nameCityLabel = UILabel.makeLabel(text: "", fontSize: 28, font: .poppinsSemiBold(size: 28), textColor: .white)
 	
@@ -75,15 +79,13 @@ final class HomeViewController: UIViewController {
 	// MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-		view.backgroundColor = UIColor(named: "backPurple")
-		view.addSubview(scrollView)
-		scrollView.addSubview(viewContainer)
-		viewContainer.addSubviews([headImage, personButton, swipeDownButton, optionsButton, nameCityLabel, dateLabel, temperatureTodayLabel, temperatureLabel, precipitationLabel, swipeDownLabel, todayLabel, collectionViewCity, collectionViewWeatherHours, swipeRightButton])
+		view.backgroundColor = Colors.backPurple
+		setupAddSubviews()
 		setupCollectionView()
 		setConstraints()
 		fetchWeatherData()
     }
-	
+
 	override func viewWillAppear(_ animated: Bool) {
 		self.navigationController?.isNavigationBarHidden = true
 	}
@@ -91,69 +93,86 @@ final class HomeViewController: UIViewController {
 	// MARK: - Configure
 	private func configure(with model: WeatherModel) {
 		nameCityLabel.text = model.geoObject?.locality.name
-		temperatureLabel.text = "\(model.fact?.temp ?? 0)°C"
+		temperatureLabel.text = "\(model.fact?.temp ?? 0)\(Constants.degreeLabel)"
 		precipitationLabel.text = model.fact?.condition?.capitalized ?? ""
-		temperatureTodayLabel.text = "\(model.forecasts.first?.parts.day?.tempMin ?? 0)°C/\(model.forecasts.first?.parts.day?.tempMax ?? 0)°C"
+		temperatureTodayLabel.text = "\(model.forecasts.first?.parts.day?.tempMin ?? 0)\(Constants.degreeLabel)/\(model.forecasts.first?.parts.day?.tempMax ?? 0)\(Constants.degreeLabel)"
 
 		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = "dd MMM EEE"
+		dateFormatter.dateFormat = Constants.date
 		let dateString = dateFormatter.string(from: Date(timeIntervalSince1970: TimeInterval(model.now ?? 0)))
 
 		dateLabel.text = dateString
-		
-		collectionViewWeatherHours.reloadData()
-
 	}
 	
+	// Получение данных о погоде для городов из API
 	private func fetchWeatherData() {
+		
 		APICaller.shared.getWeather(forCities: cities) { [weak self] result in
 			guard let self = self else { return }
 			switch result {
 			case .success(let weatherData):
-				
-				print(weatherData)
-				
+								
 				self.weatherData = weatherData.compactMap { $0 }
 				
 				DispatchQueue.main.async {
 					self.collectionViewCity.reloadData()
 					self.collectionViewWeatherHours.reloadData()
+					self.firstWeatherData()
 				}
 			case .failure(let error):
-				print("Failed to fetch detailed weather data:", error)
+				print(error.localizedDescription)
 			}
 		}
+	}
+	
+	private func firstWeatherData() {
+		guard let firstWeatherModel = weatherData.first else {
+			return
+		}
+		configure(with: firstWeatherModel)
 	}
 
 	//MARK: - Methods
 	
-	// Прокрутка скролла в конец
+	// Прокрутка скролла с прогнозом по часам в конец списка
 	@objc private func swipeRightPressed() {
-		let lastItem = collectionViewWeatherHours.numberOfItems(inSection: 0) - 1
-		let lastItemIndexPath = IndexPath(item: lastItem, section: 0)
-		collectionViewWeatherHours.scrollToItem(at: lastItemIndexPath, at: .right, animated: true)
+		let lastItem = collectionViewWeatherHours.numberOfItems(inSection: section) - minusSection
+		
+		let lastItemIndexPath = IndexPath(item: lastItem,
+										  section: section)
+		
+		collectionViewWeatherHours.scrollToItem(at: lastItemIndexPath,
+												at: .right, animated: true)
 	}
 	
 	@objc private func swipeDownPressed() {
-		print("swipeDownPressed")
 	}
 	
+	//Открытие контроллера при нажатии на кнопку options
 	@objc private func optionsButtonPressed() {
 		let greenVC = GreenViewController()
 		navigationController?.pushViewController(greenVC, animated: true)
 	}
 	
-	//Открытие модального окна при нажатии на кнопку
+	//Открытие модального окна при нажатии на кнопку person
 	@objc func personButtonPressed() {
 		let profileVC = ModalViewController()
 		profileVC.modalPresentationStyle = .fullScreen
 		present(profileVC, animated: true, completion: nil)
 	}
 	
+	// Добавление вью
+	private func setupAddSubviews() {
+		view.addSubview(scrollView)
+		scrollView.delegate = self
+		scrollView.addSubview(viewContainer)
+		viewContainer.addSubviews([headImage, personButton, swipeDownButton, optionsButton, nameCityLabel, dateLabel, temperatureTodayLabel, temperatureLabel, precipitationLabel, swipeDownLabel, todayLabel, collectionViewCity, collectionViewWeatherHours, swipeRightButton])
+	}
+	
 	private func arrayIndexForRow(_ row : Int)-> Int {
 		return row % weatherData.count
 	}
-
+	
 	// MARK: - Constraints
 	private func setConstraints() {
 		scrollView.snp.makeConstraints { scroll in
@@ -172,11 +191,11 @@ final class HomeViewController: UIViewController {
 		}
 		personButton.snp.makeConstraints { button in
 			button.top.equalTo(viewContainer.snp.top).offset(80)
-			button.leading.equalTo(viewContainer.snp.leading).offset(25)
+			button.leading.equalTo(viewContainer.snp.leading).offset(Constants.standardOffsets)
 		}
 		optionsButton.snp.makeConstraints { button in
 			button.top.equalTo(viewContainer.snp.top).offset(88)
-			button.trailing.equalTo(viewContainer.snp.trailing).offset(-27)
+			button.trailing.equalTo(viewContainer.snp.trailing).inset(27)
 		}
 		swipeDownLabel.snp.makeConstraints { label in
 			label.centerX.equalTo(headImage.snp.centerX)
@@ -188,12 +207,12 @@ final class HomeViewController: UIViewController {
 		}
 		nameCityLabel.snp.makeConstraints { label in
 			label.top.equalTo(viewContainer.snp.top).offset(170)
-			label.leading.equalTo(viewContainer.snp.leading).offset(25)
-			label.width.equalTo(195)//как ограничить 
+			label.leading.equalTo(viewContainer.snp.leading).offset(Constants.standardOffsets)
+			label.width.equalTo(195)//как ограничить
 		}
 		dateLabel.snp.makeConstraints { label in
 			label.top.equalTo(nameCityLabel.snp.bottom).offset(14)
-			label.leading.equalTo(viewContainer.snp.leading).offset(25)
+			label.leading.equalTo(viewContainer.snp.leading).offset(Constants.standardOffsets)
 		}
 		temperatureTodayLabel.snp.makeConstraints { label in
 			label.centerY.equalTo(dateLabel.snp.centerY)
@@ -201,11 +220,11 @@ final class HomeViewController: UIViewController {
 		}
 		temperatureLabel.snp.makeConstraints { label in
 			label.top.equalTo(viewContainer.snp.top).offset(163)
-			label.trailing.equalTo(viewContainer.snp.trailing).offset(-25)
+			label.trailing.equalTo(viewContainer.snp.trailing).inset(Constants.standardOffsets)
 		}
 		precipitationLabel.snp.makeConstraints { label in
 			label.top.equalTo(temperatureLabel.snp.bottom).offset(7)
-			label.trailing.equalTo(viewContainer.snp.trailing).offset(-25)
+			label.trailing.equalTo(viewContainer.snp.trailing).inset(Constants.standardOffsets)
 		}
 		collectionViewCity.snp.makeConstraints { collectionView in
 			collectionView.top.equalTo(headImage.snp.bottom).offset(30)
@@ -215,57 +234,56 @@ final class HomeViewController: UIViewController {
 		}
 		todayLabel.snp.makeConstraints { label in
 			label.top.equalTo(collectionViewCity.snp.bottom).offset(27)
-			label.leading.equalTo(viewContainer.snp.leading).offset(25)
+			label.leading.equalTo(viewContainer.snp.leading).offset(Constants.standardOffsets)
 		}
 		collectionViewWeatherHours.snp.makeConstraints { collectionView in
 			collectionView.top.equalTo(todayLabel.snp.bottom).offset(6)
 			collectionView.leading.equalTo(viewContainer.snp.leading)
-			collectionView.trailing.equalTo(viewContainer.snp.trailing).offset(-25)
+			collectionView.trailing.equalTo(viewContainer.snp.trailing).inset(Constants.standardOffsets)
 			collectionView.height.equalTo(115)
 		}
 		swipeRightButton.snp.makeConstraints { button in
 			button.centerY.equalTo(collectionViewWeatherHours.snp.centerY)
-			button.trailing.equalTo(viewContainer.snp.trailing).offset(-5)
+			button.trailing.equalTo(viewContainer.snp.trailing).inset(5)
 		}
 	}
 }
 
 // MARK: - CollectionView Setup (UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout)
 extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		if collectionView == collectionViewCity {
 			return weatherData.count * numberOfCopies
+			
 		} else if collectionView == collectionViewWeatherHours {
-			return weatherData.count
+			return 24
 		}
-		return 0
+		return weatherData.count
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		if collectionView == collectionViewCity {
-			guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CityCell.identifier, for: indexPath) as? CityCell else {
+			guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CityCell.identifier, 
+																for: indexPath) as? CityCell else {
 				return UICollectionViewCell()
 			}
-			cell.layer.cornerRadius = 22
-			cell.layer.masksToBounds = true
-			
 			let arrayIndex = arrayIndexForRow(indexPath.row)
-			
 			let weatherViewModel = weatherData[arrayIndex]
-			
 			cell.configure(with: weatherViewModel)
-	
 			return cell
 			
-			
 		} else if collectionView == collectionViewWeatherHours {
-			guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeatherHoursCell.identifier, for: indexPath) as? WeatherHoursCell else {
+			guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeatherHoursCell.identifier, 
+																for: indexPath) as? WeatherHoursCell else {
 				return UICollectionViewCell()
 			}
-			let weatherModel = weatherData[indexPath.row]
-			
-			cell.configure(with: weatherModel)
-			
+			if let selectedIndexPath = collectionViewCity.indexPathsForSelectedItems?.first {
+				let realIndex = arrayIndexForRow(selectedIndexPath.row)
+				let selectedCity = weatherData[realIndex]
+				let hourIndex = indexPath.item
+				cell.configure(with: selectedCity, index: hourIndex)
+			}
 			return cell
 		}
 		return UICollectionViewCell()
@@ -276,10 +294,8 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
 			let arrayIndex = arrayIndexForRow(indexPath.row)
 			let realIndex = arrayIndex % weatherData.count
 			let selectedCity = weatherData[realIndex]
-			
 			configure(with: selectedCity)
-		
- 			collectionViewWeatherHours.reloadData()
+			collectionViewWeatherHours.reloadData()
 		}
 	}
 	
@@ -287,19 +303,46 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		
 		if collectionView == collectionViewCity {
-			return CGSize(width: 172, height: 215)
+			return Constants.sizeCellCity
 			
 		} else if collectionView == collectionViewWeatherHours {
-			return CGSize(width: 76, height: 76)
+			return Constants.sizeCellWeather
 		}
-		return CGSize(width: 100, height: 100)
+		return Constants.sizeCellDefaults
 	}
 }
 
-extension HomeViewController {
+// MARK: - UIScrollViewDelegate
+// Реализация скролла вправо и влево
+// Бесконечный скролл
+extension HomeViewController: UIScrollViewDelegate {
+	
 	// Функция прокрутки до середины
 	func scrollToMiddle(atIndex: Int, animated: Bool = true) {
 		let middleIndex = atIndex + numberOfCopies * weatherData.count / 2
-		collectionViewCity.scrollToItem(at: IndexPath(item: middleIndex, section: 0), at: .centeredHorizontally, animated: animated)
+		collectionViewCity.scrollToItem(at: IndexPath(item: middleIndex, section: section),
+										at: .centeredHorizontally, animated: animated)
+	}
+	func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+		if scrollView == collectionViewCity {
+			let contentOffsetX = scrollView.contentOffset.x
+			let contentWidth = scrollView.contentSize.width
+			let viewWidth = scrollView.bounds.width
+			
+			// Проверяем, достиг ли скролл конца коллекции
+			if contentOffsetX <= 0 {
+				// Перемещаемся к концу коллекции
+				let lastIndex = collectionViewCity.numberOfItems(inSection: section) - minusSection
+				let lastIndexPath = IndexPath(item: lastIndex, section: section)
+				collectionViewCity.scrollToItem(at: lastIndexPath,
+												at: .right, animated: false)
+			} else if contentOffsetX >= (contentWidth - viewWidth) {
+				// Перемещаемся к началу коллекции
+				let firstIndexPath = IndexPath(item: startItem, section: startItem)
+				collectionViewCity.scrollToItem(at: firstIndexPath,
+												at: .left, animated: false)
+			}
+		}
 	}
 }
+

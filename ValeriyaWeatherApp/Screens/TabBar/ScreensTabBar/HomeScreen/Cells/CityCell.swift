@@ -9,7 +9,7 @@ final class CityCell: UICollectionViewCell {
 	
 	// MARK: - Constants
 	static let identifier = "CityCell"
-	
+		
 	// MARK: - Constants
 	private let imageViewCity: UIImageView = {
 		let imageView = UIImageView()
@@ -27,16 +27,22 @@ final class CityCell: UICollectionViewCell {
 		super.init(frame: frame)
 		addSubviews([imageViewCity, nameCityLabel, temperatureLabel])
 		setConstraints()
+		setupCell()
 	}
 	
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 	
+	private func setupCell() {
+		layer.cornerRadius = Constants.cornerRadiusCity
+		layer.masksToBounds = true
+	}
+	
 	// MARK: - Configure Cell
 	
 	func configure(with model: WeatherModel) {
-		temperatureLabel.text = "\(model.fact?.temp ?? 0)°C"
+		temperatureLabel.text = "\(model.fact?.temp ?? 0)\(Constants.degreeLabel)"
 		nameCityLabel.text = model.geoObject?.locality.name ?? ""
 		
 		switch model.fact?.condition ?? "" {
@@ -57,12 +63,12 @@ final class CityCell: UICollectionViewCell {
 			image.leading.trailing.top.bottom.equalToSuperview()
 		}
 		nameCityLabel.snp.makeConstraints { label in
-			label.top.equalToSuperview().offset(25)
-			label.leading.equalToSuperview().offset(24)
+			label.top.equalToSuperview().offset(Constants.standardOffsets)
+			label.leading.equalToSuperview().offset(Constants.standardOffsets)
 			label.width.equalTo(80)//вопрос как ограничить
 		}
 		temperatureLabel.snp.makeConstraints { label in
-			label.top.equalToSuperview().offset(25)
+			label.top.equalToSuperview().offset(Constants.standardOffsets)
 			label.leading.equalTo(nameCityLabel.snp.trailing).offset(10)
 		}
 	}

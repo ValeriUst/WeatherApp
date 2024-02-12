@@ -36,18 +36,44 @@ final class WeatherHoursCell: UICollectionViewCell {
 	}
 	
 	private func setupCell() {
-		backgroundColor = UIColor(named: "purpleLight")
-		layer.cornerRadius = 16
+		backgroundColor = Colors.purpleLight
+		layer.cornerRadius = Constants.cornerRadiusStandard
 		layer.masksToBounds = false
 	}
-	
+
 	// MARK: - ConfigureCell
-	func configure(with model: WeatherModel) {
-		temperatureLabel.text = "\(model.forecasts.first?.hours.first?.temp ?? 0)"
-		timeLabel.text = "\(model.forecasts.first?.hours.first?.hour ?? ""):00"
-		
-		if let iconURLString = model.forecasts.first?.hours.first?.icon {
-			let iconURL = URL(string: "https://yastatic.net/weather/i/icons/funky/dark/\(iconURLString).svg")
+	
+	func configure(with model: WeatherModel, index: Int) {
+		if index == 0 {
+			if let currentFact = model.fact {
+				temperatureLabel.text = "\(currentFact.temp ?? 0)"
+				timeLabel.text = Constants.nowLabel
+				
+				if let iconURLString = currentFact.icon {
+					setImage(with: iconURLString)
+				} else {
+					imageViewWeather.image = UIImage(named: "11")
+				}
+			}
+		} else {
+			let nextHourIndex = index + 1
+			if let forecast = model.forecasts.first,
+			   forecast.hours.indices.contains(nextHourIndex) {
+				let nextHourWeather = forecast.hours[nextHourIndex]
+				temperatureLabel.text = "\(nextHourWeather.temp ?? 0)"
+				timeLabel.text = "\(nextHourWeather.hour ?? ""):00"
+				
+				if let iconURLString = nextHourWeather.icon {
+					setImage(with: iconURLString)
+				} else {
+					imageViewWeather.image = UIImage(named: "11")
+				}
+			}
+		}
+	}
+	
+	private func setImage(with urlString: String) {
+		if let iconURL = URL(string: "\(Constants.urlIcon)\(urlString).svg") {
 			imageViewWeather.sd_setImage(with: iconURL,
 										 placeholderImage: nil,
 										 context: [.imageCoder: CustomSVGDecoder(fallbackDecoder: SDImageSVGCoder.shared)])
@@ -55,21 +81,6 @@ final class WeatherHoursCell: UICollectionViewCell {
 			imageViewWeather.image = UIImage(named: "11")
 		}
 	}
-	
-//	func configure(with model: WeatherViewModelCity, atIndex index: Int) {
-//		
-//		temperatureLabel.text = "\(model.hour[index].temp)"
-//		timeLabel.text = "\(model.hour[index].hour):00"
-//		
-//		if let iconURLString = model.icon?[index].icon {
-//			let iconURL = URL(string: "https://yastatic.net/weather/i/icons/funky/dark/\(iconURLString).svg")
-//			imageViewWeather.sd_setImage(with: iconURL,
-//										 placeholderImage: nil,
-//										 context: [.imageCoder: CustomSVGDecoder(fallbackDecoder: SDImageSVGCoder.shared)])
-//		} else {
-//			imageViewWeather.image = UIImage(named: "11")
-//		}
-//	}
 
 	// MARK: - Constraints
 	

@@ -4,7 +4,7 @@
 
 import Foundation
 
-struct Constants {
+struct ConstantsAPI {
 	static let API_KEY = "f9d50069-0119-4146-9588-dc7e699326e3"
 	static let baseURL = "https://api.weather.yandex.ru/v2/forecast?"
 }
@@ -38,13 +38,13 @@ final class APICaller {
 		for (index, city) in cities.enumerated() {
 			dispatchGroup.enter()
 			
-			guard let url = URL(string: "\(Constants.baseURL)lat=\(city.lat)&lon=\(city.lon)&limit=1&hours=true") else {
+			guard let url = URL(string: "\(ConstantsAPI.baseURL)lat=\(city.lat)&lon=\(city.lon)&limit=1&hours=true") else {
 				completion(.failure(APIError.invalidURL))
 				return
 			}
 			
 			var request = URLRequest(url: url)
-			request.setValue(Constants.API_KEY, forHTTPHeaderField: "X-Yandex-API-Key")
+			request.setValue(ConstantsAPI.API_KEY, forHTTPHeaderField: "X-Yandex-API-Key")
 			
 			let task = URLSession.shared.dataTask(with: request) { data, _, error in
 				defer {

@@ -21,7 +21,7 @@ final class ModalViewController: UIViewController {
 	// MARK: - Lifecycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = UIColor(named: "backPurple")
+		view.backgroundColor = Colors.backPurple
 		view.addSubviews([helloLabel, closeButton])
 		setConstraints()
 	}

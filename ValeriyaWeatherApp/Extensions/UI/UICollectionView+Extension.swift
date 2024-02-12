@@ -20,7 +20,7 @@ extension HomeViewController {
 		if let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
 			flowLayout.scrollDirection = .horizontal
 			flowLayout.minimumLineSpacing = inset
-			flowLayout.sectionInset = UIEdgeInsets(top: 0, left: sectionInset, bottom: 0, right: sectionInset)
+			flowLayout.sectionInset = Constants.standardInsets
 		}
 	}
 }
