@@ -115,8 +115,8 @@ final class HomeViewController: UIViewController {
 				self.weatherData = weatherData.compactMap { $0 }
 				
 				DispatchQueue.main.async {
-					self.collectionViewCity.reloadData()
 					self.collectionViewWeatherHours.reloadData()
+					self.collectionViewCity.reloadData()
 					self.firstWeatherData()
 				}
 			case .failure(let error):
@@ -257,7 +257,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
 			return weatherData.count * numberOfCopies
 			
 		} else if collectionView == collectionViewWeatherHours {
-			return 24
+			return 23
 		}
 		return weatherData.count
 	}
@@ -333,12 +333,14 @@ extension HomeViewController: UIScrollViewDelegate {
 			if contentOffsetX <= 0 {
 				// Перемещаемся к концу коллекции
 				let lastIndex = collectionViewCity.numberOfItems(inSection: section) - minusSection
-				let lastIndexPath = IndexPath(item: lastIndex, section: section)
+				let lastIndexPath = IndexPath(item: lastIndex, 
+											  section: section)
 				collectionViewCity.scrollToItem(at: lastIndexPath,
 												at: .right, animated: false)
 			} else if contentOffsetX >= (contentWidth - viewWidth) {
 				// Перемещаемся к началу коллекции
-				let firstIndexPath = IndexPath(item: startItem, section: startItem)
+				let firstIndexPath = IndexPath(item: startItem, 
+											   section: startItem)
 				collectionViewCity.scrollToItem(at: firstIndexPath,
 												at: .left, animated: false)
 			}

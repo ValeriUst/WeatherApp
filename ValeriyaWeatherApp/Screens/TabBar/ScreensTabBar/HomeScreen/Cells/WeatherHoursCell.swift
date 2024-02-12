@@ -45,25 +45,25 @@ final class WeatherHoursCell: UICollectionViewCell {
 	
 	func configure(with model: WeatherModel, index: Int) {
 		if index == 0 {
-			if let currentFact = model.fact {
-				temperatureLabel.text = "\(currentFact.temp ?? 0)"
+			if let fact = model.fact {
+				temperatureLabel.text = "\(fact.temp ?? 0)"
 				timeLabel.text = Constants.nowLabel
 				
-				if let iconURLString = currentFact.icon {
+				if let iconURLString = fact.icon {
 					setImage(with: iconURLString)
 				} else {
 					imageViewWeather.image = UIImage(named: "11")
 				}
 			}
 		} else {
-			let nextHourIndex = index + 1
+			let nextHour = index + 1
 			if let forecast = model.forecasts.first,
-			   forecast.hours.indices.contains(nextHourIndex) {
-				let nextHourWeather = forecast.hours[nextHourIndex]
-				temperatureLabel.text = "\(nextHourWeather.temp ?? 0)"
-				timeLabel.text = "\(nextHourWeather.hour ?? ""):00"
+			   forecast.hours.indices.contains(nextHour) {
+				let nextWeather = forecast.hours[nextHour]
+				temperatureLabel.text = "\(nextWeather.temp ?? 0)"
+				timeLabel.text = "\(nextWeather.hour ?? ""):00"
 				
-				if let iconURLString = nextHourWeather.icon {
+				if let iconURLString = nextWeather.icon {
 					setImage(with: iconURLString)
 				} else {
 					imageViewWeather.image = UIImage(named: "11")
