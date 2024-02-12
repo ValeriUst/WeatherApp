@@ -269,8 +269,8 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
 				return UICollectionViewCell()
 			}
 			let arrayIndex = arrayIndexForRow(indexPath.row)
-			let weatherViewModel = weatherData[arrayIndex]
-			cell.configure(with: weatherViewModel)
+			let weatherModel = weatherData[arrayIndex]
+			cell.configure(with: weatherModel)
 			return cell
 			
 		} else if collectionView == collectionViewWeatherHours {
@@ -315,6 +315,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
 // MARK: - UIScrollViewDelegate
 // Реализация скролла вправо и влево
 // Бесконечный скролл
+
 extension HomeViewController: UIScrollViewDelegate {
 	
 	// Функция прокрутки до середины
@@ -323,6 +324,7 @@ extension HomeViewController: UIScrollViewDelegate {
 		collectionViewCity.scrollToItem(at: IndexPath(item: middleIndex, section: section),
 										at: .centeredHorizontally, animated: animated)
 	}
+	
 	func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
 		if scrollView == collectionViewCity {
 			let contentOffsetX = scrollView.contentOffset.x
@@ -333,18 +335,14 @@ extension HomeViewController: UIScrollViewDelegate {
 			if contentOffsetX <= 0 {
 				// Перемещаемся к концу коллекции
 				let lastIndex = collectionViewCity.numberOfItems(inSection: section) - minusSection
-				let lastIndexPath = IndexPath(item: lastIndex, 
-											  section: section)
-				collectionViewCity.scrollToItem(at: lastIndexPath,
-												at: .right, animated: false)
+				let lastIndexPath = IndexPath(item: lastIndex, section: section)
+				collectionViewCity.scrollToItem(at: lastIndexPath, at: .right, animated: false)
+				
 			} else if contentOffsetX >= (contentWidth - viewWidth) {
 				// Перемещаемся к началу коллекции
-				let firstIndexPath = IndexPath(item: startItem, 
-											   section: startItem)
-				collectionViewCity.scrollToItem(at: firstIndexPath,
-												at: .left, animated: false)
+				let firstIndexPath = IndexPath(item: startItem, section: startItem)
+				collectionViewCity.scrollToItem(at: firstIndexPath, at: .left, animated: false)
 			}
 		}
 	}
 }
-

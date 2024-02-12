@@ -44,9 +44,15 @@ final class WeatherHoursCell: UICollectionViewCell {
 	// MARK: - ConfigureCell
 	
 	func configure(with model: WeatherModel, index: Int) {
+		let formatterDate = DateFormatter()
+		formatterDate.dateFormat = "h:00 a"
+		formatterDate.timeZone = TimeZone(secondsFromGMT: model.now ?? 0 * 3600)
+		let date = Date()
+		let calendar = Calendar.current
+		
 		if index == 0 {
 			if let fact = model.fact {
-				temperatureLabel.text = "\(fact.temp ?? 0)"
+				temperatureLabel.text = "\(fact.temp ?? 0)\(Constants.degreeLabel)"
 				timeLabel.text = Constants.nowLabel
 				
 				if let iconURLString = fact.icon {
@@ -56,12 +62,14 @@ final class WeatherHoursCell: UICollectionViewCell {
 				}
 			}
 		} else {
-			let nextHour = index + 1
+			let indexOne = index + 1
 			if let forecast = model.forecasts.first,
-			   forecast.hours.indices.contains(nextHour) {
-				let nextWeather = forecast.hours[nextHour]
-				temperatureLabel.text = "\(nextWeather.temp ?? 0)"
-				timeLabel.text = "\(nextWeather.hour ?? ""):00"
+			   forecast.hours.indices.contains(indexOne) {
+				let nextWeather = forecast.hours[indexOne]
+				temperatureLabel.text = "\(nextWeather.temp ?? 0)\(Constants.degreeLabel)"
+				
+				let nextHourDate = calendar.date(byAdding: .hour, value: index + 1, to: date)!
+				timeLabel.text = formatterDate.string(from: nextHourDate)
 				
 				if let iconURLString = nextWeather.icon {
 					setImage(with: iconURLString)
@@ -71,7 +79,7 @@ final class WeatherHoursCell: UICollectionViewCell {
 			}
 		}
 	}
-	
+
 	private func setImage(with urlString: String) {
 		if let iconURL = URL(string: "\(Constants.urlIcon)\(urlString).svg") {
 			imageViewWeather.sd_setImage(with: iconURL,

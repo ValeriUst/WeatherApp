@@ -5,7 +5,7 @@
 import Foundation
 import UIKit
 
-/// расстояние по бокам от collectionView
+// расстояние по бокам от collectionView
 private let inset: CGFloat = 20
 private let sectionInset: CGFloat = 25
 
