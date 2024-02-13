@@ -6,7 +6,7 @@ import Foundation
 import UIKit
 
 struct Colors {
-	static let backPurple = UIColor(named: "backPurple")
-	static let purpleLight = UIColor(named: "purpleLight")
-	static let whiteLight = UIColor(named: "whiteLight")
+	static let backPurple = UIColor(red: 0.26, green: 0.06, blue: 0.6, alpha: 1)
+	static let purpleLight = UIColor(red: 0.38, green: 0.18, blue: 0.71, alpha: 1)
+	static let whiteLight = UIColor(red: 1, green: 1, blue: 1, alpha: 0.6)
 }

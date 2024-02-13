@@ -10,6 +10,8 @@ final class HomeViewController: UIViewController {
 	// MARK: - Constants
 	private var weatherData: [WeatherModel] = [WeatherModel]()
 	
+	private var selectedCity: WeatherModel?
+	
 	private let numberOfCopies = 50  // Количество копий элементов
 	
 	private let section = 0  // Количество секций
@@ -91,19 +93,25 @@ final class HomeViewController: UIViewController {
 	}
 	
 	// MARK: - Configure
-	private func configure(with model: WeatherModel) {
-		nameCityLabel.text = model.geoObject?.locality.name
-		temperatureLabel.text = "\(model.fact?.temp ?? 0)\(Constants.degreeLabel)"
-		precipitationLabel.text = model.fact?.condition?.capitalized ?? ""
-		temperatureTodayLabel.text = "\(model.forecasts.first?.parts.day?.tempMin ?? 0)\(Constants.degreeLabel)/\(model.forecasts.first?.parts.day?.tempMax ?? 0)\(Constants.degreeLabel)"
-
-		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = Constants.date
-		let dateString = dateFormatter.string(from: Date(timeIntervalSince1970: TimeInterval(model.now ?? 0)))
-
-		dateLabel.text = dateString
+	private func configure(with weatherModel: WeatherModel?) {
+		if let weatherModel = weatherModel {
+			nameCityLabel.text = weatherModel.geoObject?.locality.name
+			temperatureLabel.text = "\(weatherModel.fact?.temp ?? 0)\(Constants.degreeLabel)"
+			precipitationLabel.text = weatherModel.fact?.condition?.capitalized
+			temperatureTodayLabel.text = "\(weatherModel.forecasts.first?.parts.day?.tempMin ?? 0)\(Constants.degreeLabel)/\(weatherModel.forecasts.first?.parts.day?.tempMax ?? 0)\(Constants.degreeLabel)"
+			let dateFormatter = DateFormatter()
+			dateFormatter.dateFormat = Constants.date
+			let dateString = dateFormatter.string(from: Date(timeIntervalSince1970: TimeInterval(weatherModel.now ?? 0)))
+			dateLabel.text = dateString
+		} else {
+			nameCityLabel.text = "Имя города неизвестно"
+			temperatureLabel.text = ""
+			precipitationLabel.text = ""
+			temperatureTodayLabel.text = ""
+			dateLabel.text = ""
+		}
 	}
-	
+
 	// Получение данных о погоде для городов из API
 	private func fetchWeatherData() {
 		
@@ -130,6 +138,8 @@ final class HomeViewController: UIViewController {
 			return
 		}
 		configure(with: firstWeatherModel)
+		
+		selectedCity = firstWeatherModel
 	}
 
 	//MARK: - Methods
@@ -264,7 +274,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		if collectionView == collectionViewCity {
-			guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CityCell.identifier, 
+			guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CityCell.identifier,
 																for: indexPath) as? CityCell else {
 				return UICollectionViewCell()
 			}
@@ -274,27 +284,26 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
 			return cell
 			
 		} else if collectionView == collectionViewWeatherHours {
-			guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeatherHoursCell.identifier,
-																for: indexPath) as? WeatherHoursCell else {
-				return UICollectionViewCell()
-			}
-			if let selectedIndexPath = collectionViewCity.indexPathsForSelectedItems?.first {
-				let realIndex = arrayIndexForRow(selectedIndexPath.row)
-				let selectedCity = weatherData[realIndex]
-				let hourIndex = indexPath.item
-				cell.configure(with: selectedCity, index: hourIndex)
-			}
-			return cell
-		}
-		return UICollectionViewCell()
-	}
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeatherHoursCell.identifier,
+                                                            for: indexPath) as? WeatherHoursCell else {
+            return UICollectionViewCell()
+        }
+        // Проверяем, есть ли выбранный город
+        if let selectedCity = selectedCity {
+            let hourIndex = indexPath.item
+            cell.configure(with: selectedCity, index: hourIndex)
+        }
+        return cell
+    }
+    return UICollectionViewCell()
+}
 	
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		if collectionView == collectionViewCity {
 			let arrayIndex = arrayIndexForRow(indexPath.row)
 			let realIndex = arrayIndex % weatherData.count
-			let selectedCity = weatherData[realIndex]
-			configure(with: selectedCity)
+			selectedCity = weatherData[realIndex]
+			configure(with: selectedCity ?? nil)
 			collectionViewWeatherHours.reloadData()
 		}
 	}
