@@ -257,7 +257,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
 			return weatherData.count * numberOfCopies //для реализации скролла
 			
 		} else if collectionView == collectionViewWeatherHours {
-			return 23 //
+			return 23
 		}
 		return weatherData.count
 	}
@@ -298,7 +298,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
 			collectionViewWeatherHours.reloadData()
 		}
 	}
-	
+
 	// MARK: - UICollectionViewDelegateFlowLayout
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		
