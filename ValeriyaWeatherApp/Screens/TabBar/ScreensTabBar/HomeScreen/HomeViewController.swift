@@ -254,10 +254,10 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
 	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		if collectionView == collectionViewCity {
-			return weatherData.count * numberOfCopies
+			return weatherData.count * numberOfCopies //для реализации скролла
 			
 		} else if collectionView == collectionViewWeatherHours {
-			return 23
+			return 23 //
 		}
 		return weatherData.count
 	}
@@ -274,7 +274,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
 			return cell
 			
 		} else if collectionView == collectionViewWeatherHours {
-			guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeatherHoursCell.identifier, 
+			guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeatherHoursCell.identifier,
 																for: indexPath) as? WeatherHoursCell else {
 				return UICollectionViewCell()
 			}
@@ -327,21 +327,22 @@ extension HomeViewController: UIScrollViewDelegate {
 	
 	func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
 		if scrollView == collectionViewCity {
-			let contentOffsetX = scrollView.contentOffset.x
-			let contentWidth = scrollView.contentSize.width
+			let offsetX = scrollView.contentOffset.x
+			let scrollWidth = scrollView.contentSize.width
 			let viewWidth = scrollView.bounds.width
 			
 			// Проверяем, достиг ли скролл конца коллекции
-			if contentOffsetX <= 0 {
+			if offsetX <= 0 {
 				// Перемещаемся к концу коллекции
 				let lastIndex = collectionViewCity.numberOfItems(inSection: section) - minusSection
 				let lastIndexPath = IndexPath(item: lastIndex, section: section)
 				collectionViewCity.scrollToItem(at: lastIndexPath, at: .right, animated: false)
 				
-			} else if contentOffsetX >= (contentWidth - viewWidth) {
+			} else if offsetX >= (scrollWidth - viewWidth) {
 				// Перемещаемся к началу коллекции
-				let firstIndexPath = IndexPath(item: startItem, section: startItem)
+				let firstIndexPath = IndexPath(item: startItem, section: section)
 				collectionViewCity.scrollToItem(at: firstIndexPath, at: .left, animated: false)
+			} else {
 			}
 		}
 	}

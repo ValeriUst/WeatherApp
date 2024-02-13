@@ -60,7 +60,6 @@ final class APICaller {
 					let result = try JSONDecoder().decode(WeatherModel.self, from: data)
 					resultsArray[index] = result
 				} catch {
-					print("Failed to decode weather data:", error.localizedDescription)
 					completion(.failure(APIError.failedToDecodeData))
 				}
 			}

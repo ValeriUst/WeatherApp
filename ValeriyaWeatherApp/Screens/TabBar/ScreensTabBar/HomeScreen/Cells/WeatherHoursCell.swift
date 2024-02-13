@@ -63,15 +63,15 @@ final class WeatherHoursCell: UICollectionViewCell {
 			}
 		} else {
 			let indexOne = index + 1
-			if let forecast = model.forecasts.first,
-			   forecast.hours.indices.contains(indexOne) {
-				let nextWeather = forecast.hours[indexOne]
-				temperatureLabel.text = "\(nextWeather.temp ?? 0)\(Constants.degreeLabel)"
+			if let hours = model.forecasts.first?.hours,
+			   hours.indices.contains(indexOne) {
+				let nextHoursWeather = hours[indexOne]
+				temperatureLabel.text = "\(nextHoursWeather.temp ?? 0)\(Constants.degreeLabel)"
 				
 				let nextHourDate = calendar.date(byAdding: .hour, value: index + 1, to: date)!
 				timeLabel.text = formatterDate.string(from: nextHourDate)
 				
-				if let iconURLString = nextWeather.icon {
+				if let iconURLString = nextHoursWeather.icon {
 					setImage(with: iconURLString)
 				} else {
 					imageViewWeather.image = UIImage(named: "11")
