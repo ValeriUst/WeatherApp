@@ -2,7 +2,6 @@
 //  ValeriyaWeatherApp
 //  Created by Валерия Устименко on 12.02.2024.
 
-import Foundation
 import UIKit
 
 struct Constants {
@@ -24,7 +23,19 @@ struct Constants {
 	static let degreeLabel = "°C"
 	static let urlIcon = "https://yastatic.net/weather/i/icons/funky/dark/"
 	static let date = "dd MMM EEE"
+	
+	static let errorCity = "Имя города неизвестно"
+	static let errorTemperature = "Температура неизвестна"
+	static let errorPrecipitation = "Осадки неизвестны"
+	static let errorDate = "Дата неизвестна"
 
-
+	
+	// MARK: - Constants UI
+	static let swipeFontSize: CGFloat = 12
+	static let todayFontSize: CGFloat = 20
+	static let nameCityFontSize: CGFloat = 28
+	static let dateFontSize: CGFloat = 12.91
+	static let temperatureTodayFontSize: CGFloat = 12.91
+	static let temperatureFontSize: CGFloat = 36
+	static let precipitationFontSize: CGFloat = 21.33
 }
-

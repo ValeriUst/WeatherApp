@@ -6,11 +6,9 @@ import UIKit
 import SnapKit
 
 final class CityCell: UICollectionViewCell {
-	
-	// MARK: - Constants
-	static let identifier = "CityCell"
 		
 	// MARK: - Constants
+	
 	private let imageViewCity: UIImageView = {
 		let imageView = UIImageView()
 		imageView.contentMode = .scaleAspectFill
@@ -18,8 +16,7 @@ final class CityCell: UICollectionViewCell {
 		return imageView
 	}()
 	
-	private let nameCityLabel = UILabel.makeLabel(text: "", fontSize: 18, font: .poppinsSemiBold(size: 20), textColor: .white)// вопрос уменьшила размер с 20 до 18
-	
+	private let nameCityLabel = UILabel.makeLabel(text: "", fontSize: 18, font: .poppinsSemiBold(size: 20), textColor: .white)
 	private let temperatureLabel = UILabel.makeLabel(text: "", fontSize: 18.8, font: .poppinsSemiBold(size: 18.8), textColor: .white)
 	
 	// MARK: - SetUp UI

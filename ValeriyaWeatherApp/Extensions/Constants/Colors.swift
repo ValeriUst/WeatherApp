@@ -2,7 +2,6 @@
 //  ValeriyaWeatherApp
 //  Created by Валерия Устименко on 12.02.2024.
 
-import Foundation
 import UIKit
 
 struct Colors {

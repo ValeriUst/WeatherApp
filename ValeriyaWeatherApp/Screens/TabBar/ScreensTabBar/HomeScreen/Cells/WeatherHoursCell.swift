@@ -8,10 +8,7 @@ import SDWebImage
 import SDWebImageSVGCoder
 
 final class WeatherHoursCell: UICollectionViewCell {
-	
-	// MARK: - Constants
-	static let identifier = "WeatherHoursCell"
-		
+			
 	// MARK: - Constants
 	private let imageViewWeather: UIImageView = {
 		let imageView = UIImageView()
@@ -19,9 +16,7 @@ final class WeatherHoursCell: UICollectionViewCell {
 		imageView.clipsToBounds = true
 		return imageView
 	}()
-
 	private let temperatureLabel = UILabel.makeLabel(text: "", fontSize: 15, font: .poppinsMedium(size: 15), textColor: .white)
-	
 	private let timeLabel = UILabel.makeLabel(text: "", fontSize: 15, font: .poppinsSemiBold(size: 15), textColor: .white)
 
 	// MARK: - SetUp UI

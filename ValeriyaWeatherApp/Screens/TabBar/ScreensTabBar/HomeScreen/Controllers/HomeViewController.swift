@@ -9,17 +9,8 @@ final class HomeViewController: UIViewController {
 	
 	// MARK: - Constants
 	private var weatherData: [WeatherModel] = [WeatherModel]()
-	
 	private var selectedCity: WeatherModel?
-	
-	private let numberOfCopies = 50  // Количество копий элементов
-	
-	private let section = 0  // Количество секций
-	
-	private let minusSection = 1
-	
-	private let startItem = 0
-	
+
 	// MARK: - Content
 
 	private let scrollView: UIScrollView = {
@@ -44,39 +35,70 @@ final class HomeViewController: UIViewController {
 	}()
 	
 	//UICollectionView + setup
-	private let collectionViewCity = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-	
-	private let collectionViewWeatherHours = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-	
+	private let collectionViewCity = UICollectionView(frame: .zero, 
+													  collectionViewLayout: UICollectionViewFlowLayout())
+	private let collectionViewWeatherHours = UICollectionView(frame: .zero,
+															  collectionViewLayout: UICollectionViewFlowLayout())
 	private func setupCollectionView() {
-		setupCollectionView(collectionView: collectionViewCity, cellType: CityCell.self)
+		setupCollectionView(collectionView: collectionViewCity, 
+							cellType: CityCell.self)
 		
-		setupCollectionView(collectionView: collectionViewWeatherHours, cellType: WeatherHoursCell.self)
+		setupCollectionView(collectionView: collectionViewWeatherHours, 
+							cellType: WeatherHoursCell.self)
 	}
 	
 	//UILabels
-	private let swipeDownLabel = UILabel.makeLabel(text: Constants.swipeLabel, fontSize: 12, font: UIFont.robotoRegular(size: 12), textColor: .white)
+	private let swipeDownLabel = UILabel.makeLabel(text: Constants.swipeLabel, 
+												   fontSize: Constants.swipeFontSize,
+												   font: UIFont.robotoRegular(size: Constants.swipeFontSize),
+												   textColor: .white)
 	
-	private let todayLabel = UILabel.makeLabel(text: Constants.todayLabel, fontSize: 20, font: .poppinsMedium(size: 20), textColor: .white)
+	private let todayLabel = UILabel.makeLabel(text: Constants.todayLabel,
+											   fontSize: Constants.todayFontSize,
+											   font: .poppinsMedium(size: Constants.todayFontSize),
+											   textColor: .white)
 	
-	private let nameCityLabel = UILabel.makeLabel(text: "", fontSize: 28, font: .poppinsSemiBold(size: 28), textColor: .white)
+	private let nameCityLabel = UILabel.makeLabel(text: "", 
+												  fontSize: Constants.nameCityFontSize,
+												  font: .poppinsSemiBold(size: Constants.nameCityFontSize),
+												  textColor: .white)
 	
-	private let dateLabel = UILabel.makeLabel(text: "", fontSize: 12.91, font: .poppinsRegular(size: 12.91), textColor: .white)
+	private let dateLabel = UILabel.makeLabel(text: "", 
+											  fontSize: Constants.dateFontSize,
+											  font: .poppinsRegular(size: Constants.dateFontSize),
+											  textColor: .white)
 	
-	private let temperatureTodayLabel = UILabel.makeLabel(text: "", fontSize: 12.91, font: .poppinsRegular(size: 12.91), textColor: .white)
+	private let temperatureTodayLabel = UILabel.makeLabel(text: "", 
+														  fontSize: Constants.temperatureTodayFontSize,
+														  font: .poppinsRegular(size: Constants.temperatureTodayFontSize),
+														  textColor: .white)
 
-	private let temperatureLabel = UILabel.makeLabel(text: "", fontSize: 36, font: .poppinsSemiBold(size: 36), textColor: .white)
+	private let temperatureLabel = UILabel.makeLabel(text: "", 
+													 fontSize: Constants.temperatureFontSize,
+													 font: .poppinsSemiBold(size: Constants.temperatureFontSize),
+													 textColor: .white)
 
-	private let precipitationLabel = UILabel.makeLabel(text: "", fontSize: 21.33, font: .poppinsRegular(size: 21.33), textColor: .white)
+	private let precipitationLabel = UILabel.makeLabel(text: "", 
+													   fontSize: Constants.precipitationFontSize,
+													   font: .poppinsRegular(size: Constants.precipitationFontSize),
+													   textColor: .white)
 
 	//UIButtons
-	private let personButton = UIButton.makeImageButton(named: "person", target: self, action: #selector(personButtonPressed))
+	private let personButton = UIButton.makeImageButton(named: "person", 
+														target: self,
+														action: #selector(personButtonPressed))
 	
-	private let optionsButton = UIButton.makeImageButton(named: "ButtonLeft", target: self, action: #selector(optionsButtonPressed))
+	private let optionsButton = UIButton.makeImageButton(named: "ButtonLeft", 
+														 target: self,
+														 action: #selector(optionsButtonPressed))
 	
-	private let swipeDownButton = UIButton.makeImageButton(named: "vector", target: self, action: #selector(swipeDownPressed))
+	private let swipeDownButton = UIButton.makeImageButton(named: "vector", 
+														   target: self,
+														   action: #selector(swipeDownPressed))
 	
-	private let swipeRightButton = UIButton.makeImageButton(named: "vectorRight", target: self, action: #selector(swipeRightPressed))
+	private let swipeRightButton = UIButton.makeImageButton(named: "vectorRight", 
+															target: self,
+															action: #selector(swipeRightPressed))
 
 	// MARK: - Lifecycle
     override func viewDidLoad() {
@@ -104,11 +126,11 @@ final class HomeViewController: UIViewController {
 			let dateString = dateFormatter.string(from: Date(timeIntervalSince1970: TimeInterval(weatherModel.now ?? 0)))
 			dateLabel.text = dateString
 		} else {
-			nameCityLabel.text = "Имя города неизвестно"
-			temperatureLabel.text = ""
-			precipitationLabel.text = ""
-			temperatureTodayLabel.text = ""
-			dateLabel.text = ""
+			nameCityLabel.text = Constants.errorCity
+			temperatureLabel.text = Constants.errorTemperature
+			precipitationLabel.text = Constants.errorPrecipitation
+			temperatureTodayLabel.text = Constants.errorTemperature
+			dateLabel.text = Constants.errorDate
 		}
 	}
 
@@ -138,7 +160,6 @@ final class HomeViewController: UIViewController {
 			return
 		}
 		configure(with: firstWeatherModel)
-		
 		selectedCity = firstWeatherModel
 	}
 
@@ -146,16 +167,17 @@ final class HomeViewController: UIViewController {
 	
 	// Прокрутка скролла с прогнозом по часам в конец списка
 	@objc private func swipeRightPressed() {
-		let lastItem = collectionViewWeatherHours.numberOfItems(inSection: section) - minusSection
+		let lastItem = collectionViewWeatherHours.numberOfItems(inSection: ConstantsHome.section) - ConstantsHome.minusSection
 		
 		let lastItemIndexPath = IndexPath(item: lastItem,
-										  section: section)
+										  section: ConstantsHome.section)
 		
 		collectionViewWeatherHours.scrollToItem(at: lastItemIndexPath,
 												at: .right, animated: true)
 	}
 	
 	@objc private func swipeDownPressed() {
+		//
 	}
 	
 	//Открытие контроллера при нажатии на кнопку options
@@ -182,79 +204,79 @@ final class HomeViewController: UIViewController {
 	private func arrayIndexForRow(_ row : Int)-> Int {
 		return row % weatherData.count
 	}
-	
+
 	// MARK: - Constraints
 	private func setConstraints() {
 		scrollView.snp.makeConstraints { scroll in
-			scroll.top.leading.trailing.bottom.equalToSuperview()
+			scroll.edges.equalToSuperview()
 		}
 		viewContainer.snp.makeConstraints { view in
 			view.edges.equalTo(scrollView)
 			view.width.equalTo(scrollView.snp.width)
-			view.height.equalTo(950)
+			view.height.equalTo(ConstantsHome.viewHeight)
 		}
 		headImage.snp.makeConstraints { image in
 			image.top.equalTo(viewContainer.snp.top)
 			image.leading.equalTo(viewContainer.snp.leading)
 			image.trailing.equalTo(viewContainer.snp.trailing)
-			image.height.equalTo(381)
+			image.height.equalTo(ConstantsHome.imageHeight)
 		}
 		personButton.snp.makeConstraints { button in
-			button.top.equalTo(viewContainer.snp.top).offset(80)
+			button.top.equalTo(viewContainer.snp.top).offset(ConstantsHome.personButtonTop)
 			button.leading.equalTo(viewContainer.snp.leading).offset(Constants.standardOffsets)
 		}
 		optionsButton.snp.makeConstraints { button in
-			button.top.equalTo(viewContainer.snp.top).offset(88)
-			button.trailing.equalTo(viewContainer.snp.trailing).inset(27)
+			button.top.equalTo(viewContainer.snp.top).offset(ConstantsHome.optionsButtonTop)
+			button.trailing.equalTo(viewContainer.snp.trailing).inset(ConstantsHome.optionsButtonTrailing)
 		}
 		swipeDownLabel.snp.makeConstraints { label in
 			label.centerX.equalTo(headImage.snp.centerX)
-			label.bottom.equalTo(swipeDownButton.snp.top).offset(-9)
+			label.bottom.equalTo(swipeDownButton.snp.top).offset(-ConstantsHome.swipeDownLabelBottom)
 		}
 		swipeDownButton.snp.makeConstraints { button in
 			button.centerX.equalTo(headImage.snp.centerX)
-			button.bottom.equalTo(headImage.snp.bottom).offset(-11)
+			button.bottom.equalTo(headImage.snp.bottom).offset(-ConstantsHome.swipeDownBottom)
 		}
 		nameCityLabel.snp.makeConstraints { label in
-			label.top.equalTo(viewContainer.snp.top).offset(170)
+			label.top.equalTo(viewContainer.snp.top).offset(ConstantsHome.nameCityWidthTop)
 			label.leading.equalTo(viewContainer.snp.leading).offset(Constants.standardOffsets)
-			label.width.equalTo(195)//как ограничить
+			label.width.equalTo(ConstantsHome.nameCityWidth)
 		}
 		dateLabel.snp.makeConstraints { label in
-			label.top.equalTo(nameCityLabel.snp.bottom).offset(14)
+			label.top.equalTo(nameCityLabel.snp.bottom).offset(ConstantsHome.dateLabelTop)
 			label.leading.equalTo(viewContainer.snp.leading).offset(Constants.standardOffsets)
 		}
 		temperatureTodayLabel.snp.makeConstraints { label in
 			label.centerY.equalTo(dateLabel.snp.centerY)
-			label.leading.equalTo(dateLabel.snp.trailing).offset(10)
+			label.leading.equalTo(dateLabel.snp.trailing).offset(ConstantsHome.temperatureTodayLeading)
 		}
 		temperatureLabel.snp.makeConstraints { label in
-			label.top.equalTo(viewContainer.snp.top).offset(163)
+			label.top.equalTo(viewContainer.snp.top).offset(ConstantsHome.temperatureLabelTop)
 			label.trailing.equalTo(viewContainer.snp.trailing).inset(Constants.standardOffsets)
 		}
 		precipitationLabel.snp.makeConstraints { label in
-			label.top.equalTo(temperatureLabel.snp.bottom).offset(7)
+			label.top.equalTo(temperatureLabel.snp.bottom).offset(ConstantsHome.precipitationLabelTop)
 			label.trailing.equalTo(viewContainer.snp.trailing).inset(Constants.standardOffsets)
 		}
 		collectionViewCity.snp.makeConstraints { collectionView in
-			collectionView.top.equalTo(headImage.snp.bottom).offset(30)
+			collectionView.top.equalTo(headImage.snp.bottom).offset(ConstantsHome.collectionViewCityTop)
 			collectionView.leading.equalTo(viewContainer.snp.leading)
 			collectionView.trailing.equalTo(viewContainer.snp.trailing)
-			collectionView.height.equalTo(215)
+			collectionView.height.equalTo(ConstantsHome.collectionViewCityHeight)
 		}
 		todayLabel.snp.makeConstraints { label in
-			label.top.equalTo(collectionViewCity.snp.bottom).offset(27)
+			label.top.equalTo(collectionViewCity.snp.bottom).offset(ConstantsHome.todayLabelTop)
 			label.leading.equalTo(viewContainer.snp.leading).offset(Constants.standardOffsets)
 		}
 		collectionViewWeatherHours.snp.makeConstraints { collectionView in
-			collectionView.top.equalTo(todayLabel.snp.bottom).offset(6)
+			collectionView.top.equalTo(todayLabel.snp.bottom).offset(ConstantsHome.collectionViewWeatherTop)
 			collectionView.leading.equalTo(viewContainer.snp.leading)
 			collectionView.trailing.equalTo(viewContainer.snp.trailing).inset(Constants.standardOffsets)
-			collectionView.height.equalTo(115)
+			collectionView.height.equalTo(ConstantsHome.collectionViewWeatherHeight)
 		}
 		swipeRightButton.snp.makeConstraints { button in
 			button.centerY.equalTo(collectionViewWeatherHours.snp.centerY)
-			button.trailing.equalTo(viewContainer.snp.trailing).inset(5)
+			button.trailing.equalTo(viewContainer.snp.trailing).inset(ConstantsHome.swipeRightButtonTrailing)
 		}
 	}
 }
@@ -264,7 +286,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
 	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		if collectionView == collectionViewCity {
-			return weatherData.count * numberOfCopies //для реализации скролла
+			return weatherData.count * ConstantsHome.numberOfCopies //для реализации скролла
 			
 		} else if collectionView == collectionViewWeatherHours {
 			return 23
@@ -329,8 +351,8 @@ extension HomeViewController: UIScrollViewDelegate {
 	
 	// Функция прокрутки до середины
 	func scrollToMiddle(atIndex: Int, animated: Bool = true) {
-		let middleIndex = atIndex + numberOfCopies * weatherData.count / 2
-		collectionViewCity.scrollToItem(at: IndexPath(item: middleIndex, section: section),
+		let middleIndex = atIndex + ConstantsHome.numberOfCopies * weatherData.count / 2
+		collectionViewCity.scrollToItem(at: IndexPath(item: middleIndex, section: ConstantsHome.section),
 										at: .centeredHorizontally, animated: animated)
 	}
 	
@@ -340,16 +362,16 @@ extension HomeViewController: UIScrollViewDelegate {
 			let scrollWidth = scrollView.contentSize.width
 			let viewWidth = scrollView.bounds.width
 			
-			// Проверяем, достиг ли скролл конца коллекции
+			// Проверяем, достиг ли скролл края коллекции
 			if offsetX <= 0 {
 				// Перемещаемся к концу коллекции
-				let lastIndex = collectionViewCity.numberOfItems(inSection: section) - minusSection
-				let lastIndexPath = IndexPath(item: lastIndex, section: section)
+				let lastIndex = collectionViewCity.numberOfItems(inSection: ConstantsHome.section) - ConstantsHome.minusSection
+				let lastIndexPath = IndexPath(item: lastIndex, section: ConstantsHome.section)
 				collectionViewCity.scrollToItem(at: lastIndexPath, at: .right, animated: false)
 				
 			} else if offsetX >= (scrollWidth - viewWidth) {
 				// Перемещаемся к началу коллекции
-				let firstIndexPath = IndexPath(item: startItem, section: section)
+				let firstIndexPath = IndexPath(item: ConstantsHome.startItem, section: ConstantsHome.section)
 				collectionViewCity.scrollToItem(at: firstIndexPath, at: .left, animated: false)
 			} else {
 			}
